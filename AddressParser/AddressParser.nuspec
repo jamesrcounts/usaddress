@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>AddressParser</id>
+    <version>0.0.1</version>
+    <title>AddressParser</title>
+    <authors>Jim Counts</authors>
+    <owners>Jim Counts</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This is a partial port of the Perl Geo::StreetAddress::US CPAN module to C#.</description>
+    <copyright>Copyright © Jim Counts 2011</copyright>
+    <dependencies />
+  </metadata>
+</package>

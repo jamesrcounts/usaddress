@@ -2,8 +2,6 @@
 {
     using ApprovalTests;
 
-    using ApprovalUtilities.Utilities;
-
     using NUnit.Framework;
 
     [TestFixture]
