@@ -1,4 +1,5 @@
-﻿usaddress
+﻿![Icon](https://raw.github.com/jamesrcounts/usaddress/master/Icons/icon_36386.png)
+usaddress
 =========
 
 Fork of https://usaddress.codeplex.com/
