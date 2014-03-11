@@ -9,7 +9,7 @@
     ///     <para>
     ///         This is an attempt at a port of the Perl CPAN module Geo::StreetAddress::US
     ///         to C#. It's a regex-based street address and street intersection parser for the
-    ///         United States. 
+    ///         United States.
     ///     </para>
     ///     <para>
     ///         The original Perl version was written and is copyrighted by
@@ -17,8 +17,8 @@
     ///         <a href="http://search.cpan.org/~timb/Geo-StreetAddress-US-1.03/US.pm">CPAN</a>.
     ///     </para>
     ///     <para>
-    ///         It says that "this library is free software; you can redistribute it and/or modify 
-    ///         it under the same terms as Perl itself, either Perl version 5.8.4 or, at 
+    ///         It says that "this library is free software; you can redistribute it and/or modify
+    ///         it under the same terms as Perl itself, either Perl version 5.8.4 or, at
     ///         your option, any later version of Perl 5 you may have available."
     ///     </para>
     ///     <para>
@@ -47,7 +47,7 @@
                 { "NORTHWEST", "NW" }
             };
 
-        #endregion
+        #endregion Directionals
 
         #region States
 
@@ -119,7 +119,7 @@
                 { "WYOMING", "WY" }
             };
 
-        #endregion
+        #endregion States
 
         #region Suffixes
 
@@ -127,7 +127,7 @@
         /// Maps lowerecased USPS standard street suffixes to their canonical postal
         /// abbreviations as found in TIGER/Line.
         /// </summary>
-        private static Dictionary<string, string> suffixes = 
+        private static Dictionary<string, string> suffixes =
             new Dictionary<string, string>()
             {
                 { "ALLEE", "ALY" },
@@ -494,7 +494,7 @@
                 { "WY", "WAY" }
             };
 
-        #endregion
+        #endregion Suffixes
 
         #region Secondary Unit Designators - Ranged
 
@@ -522,7 +522,7 @@
                 { @"BOX", "BOX" }
             };
 
-        #endregion
+        #endregion Secondary Unit Designators - Ranged
 
         #region Secondary Unit Designators - Rangeless
 
@@ -543,12 +543,7 @@
                 { "UPPE?R", "UPPR" }
             };
 
-        #endregion
-
-        /// <summary>
-        /// A combined dictionary of the ranged and rangeless secondary units.
-        /// </summary>
-        private static Dictionary<string, string> allSecondaryUnits;
+        #endregion Secondary Unit Designators - Rangeless
 
         /// <summary>
         /// The gigantic regular expression that actually extracts the bits and pieces
@@ -557,10 +552,15 @@
         private static Regex addressRegex;
 
         /// <summary>
+        /// A combined dictionary of the ranged and rangeless secondary units.
+        /// </summary>
+        private static Dictionary<string, string> allSecondaryUnits;
+
+        /// <summary>
         /// In the <see cref="M:addressRegex"/> member, these are the names
         /// of the groups in the result that we care to inspect.
         /// </summary>
-        private static string[] fields = 
+        private static string[] fields =
             new[]
             {
                 "NUMBER",
@@ -596,24 +596,50 @@
         /// Attempts to parse the given input as a US address.
         /// </summary>
         /// <param name="input">The input string.</param>
+        /// <param name="b"></param>
         /// <returns>The parsed address, or null if the address could not be parsed.</returns>
         public AddressParseResult ParseAddress(string input)
         {
-            if (!string.IsNullOrWhiteSpace(input))
-            {
-                var match = addressRegex.Match(input.ToUpperInvariant());
-                if (match.Success)
-                {
-                    var extracted = GetApplicableFields(match);
-                    return new AddressParseResult(Normalize(extracted));
-                }
-            }
-
-            return null;
+            return ParseAddress(input, true);
         }
 
         /// <summary>
-        /// Given a successful <see cref="Match"/>, this method creates a dictionary 
+        /// Attempts to parse the given input as a US address.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="normalize">if set to <c>true</c> then normalize extracted fields.</param>
+        /// <returns>
+        /// The parsed address, or null if the address could not be parsed.
+        /// </returns>
+        public AddressParseResult ParseAddress(string input, bool normalize)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return null;
+            }
+
+            if (normalize)
+            {
+                input = input.ToUpperInvariant();
+            }
+
+            var match = addressRegex.Match(input);
+            if (!match.Success)
+            {
+                return null;
+            }
+
+            var extracted = GetApplicableFields(match);
+            if (normalize)
+            {
+                extracted = Normalize(extracted);
+            }
+
+            return new AddressParseResult(extracted);
+        }
+
+        /// <summary>
+        /// Given a successful <see cref="Match"/>, this method creates a dictionary
         /// consisting of the fields that we actually care to extract from the address.
         /// </summary>
         /// <param name="match">The successful <see cref="Match"/> instance.</param>
@@ -625,12 +651,14 @@
 
             foreach (var field in addressRegex.GetGroupNames())
             {
-                if (fields.Contains(field))
+                if (!fields.Contains(field))
                 {
-                    if (match.Groups[field].Success)
-                    {
-                        applicable[field] = match.Groups[field].Value;
-                    }
+                    continue;
+                }
+
+                if (match.Groups[field].Success)
+                {
+                    applicable[field] = match.Groups[field].Value;
                 }
             }
 
@@ -710,15 +738,19 @@
                 case "POSTDIRECTIONAL":
                     output = GetNormalizedValueByStaticLookup(directionals, input);
                     break;
+
                 case "SUFFIX":
                     output = GetNormalizedValueByStaticLookup(suffixes, input);
                     break;
+
                 case "SECONDARYUNIT":
                     output = GetNormalizedValueByRegexLookup(allSecondaryUnits, input);
                     break;
+
                 case "STATE":
                     output = GetNormalizedValueByStaticLookup(states, input);
                     break;
+
                 case "NUMBER":
                     if (!input.Contains('/'))
                     {
@@ -726,6 +758,7 @@
                     }
 
                     break;
+
                 default:
                     break;
             }
@@ -742,17 +775,17 @@
             var suffixPattern = new Regex(
                 string.Join(
                     "|",
-                    new [] {
-                        string.Join("|", suffixes.Keys), 
+                    new[] {
+                        string.Join("|", suffixes.Keys),
                         string.Join("|", suffixes.Values.Distinct())
                     }),
                 RegexOptions.Compiled);
 
-            var statePattern = 
-                @"\b(?:" + 
+            var statePattern =
+                @"\b(?:" +
                 string.Join(
                     "|",
-                    new [] {
+                    new[] {
                         string.Join("|", states.Keys.Select(x => Regex.Escape(x))),
                         string.Join("|", states.Values)
                     }) +
@@ -761,7 +794,7 @@
             var directionalPattern =
                 string.Join(
                     "|",
-                    new [] {
+                    new[] {
                         string.Join("|", directionals.Keys),
                         string.Join("|", directionals.Values),
                         string.Join("|", directionals.Values.Select(x => Regex.Replace(x, @"(\w)", @"$1\.")))
@@ -887,9 +920,10 @@
                 zipPattern);
             addressRegex = new Regex(
                 addressPattern,
-                RegexOptions.Compiled | 
-                RegexOptions.Singleline | 
-                RegexOptions.IgnorePatternWhitespace);
+                RegexOptions.Compiled |
+                RegexOptions.Singleline |
+                RegexOptions.IgnorePatternWhitespace |
+                RegexOptions.IgnoreCase);
         }
 
         /// <summary>

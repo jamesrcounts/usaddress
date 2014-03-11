@@ -1,13 +1,11 @@
 ﻿namespace AddressParser.Driver
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var parser = new AddressParser();
             var loop = false;
@@ -41,7 +39,7 @@
                     {
                         Console.WriteLine(
                             "{0,30} : {1}",
-                            property.Name, 
+                            property.Name,
                             property.GetValue(result, null));
                     }
                 }
