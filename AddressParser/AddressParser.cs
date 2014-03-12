@@ -49,15 +49,12 @@
 
         #endregion Directionals
 
-        #region States
-
         /// <summary>
-        /// Maps lowercased US state and territory names to their canonical two-letter
+        /// Maps lowercase US state and territory names to their canonical two-letter
         /// postal abbreviations.
         /// </summary>
-        private static Dictionary<string, string> states =
-            new Dictionary<string, string>()
-            {
+        private static readonly Dictionary<string, string> States =
+            new Dictionary<string, string> {
                 { "ALABAMA", "AL" },
                 { "ALASKA", "AK" },
                 { "AMERICAN SAMOA", "AS" },
@@ -118,8 +115,6 @@
                 { "WISCONSIN", "WI" },
                 { "WYOMING", "WY" }
             };
-
-        #endregion States
 
         /// <summary>
         /// Maps lowercase USPS standard street suffixes to their canonical postal
@@ -588,6 +583,34 @@
             InitializeRegex();
         }
 
+        public static string StatePattern
+        {
+            get
+            {
+                var statePattern = @"\b(?:"
+                                   + string.Join(
+                                       "|",
+                                       new[]
+                                           {
+                                               string.Join("|", StatesAndProvinces.Keys.Select(x => Regex.Escape(x))),
+                                               string.Join("|", StatesAndProvinces.Values)
+                                           }) + @")\b";
+                return statePattern;
+            }
+        }
+
+        /// <summary>
+        /// Maps lowercase US state and territory names to their canonical two-letter
+        /// postal abbreviations.
+        /// </summary>
+        public static Dictionary<string, string> StatesAndProvinces
+        {
+            get
+            {
+                return States;
+            }
+        }
+
         /// <summary>
         /// Maps lowercase USPS standard street suffixes to their canonical postal
         /// abbreviations as found in TIGER/Line.
@@ -597,6 +620,16 @@
             get
             {
                 return Suffixes;
+            }
+        }
+
+        public static string SuffixPattern
+        {
+            get
+            {
+                return string.Join(
+                    "|",
+                    new[] { string.Join("|", StreetSuffixes.Values.Distinct()), string.Join("|", StreetSuffixes.Keys), });
             }
         }
 
@@ -756,7 +789,7 @@
                     break;
 
                 case "STATE":
-                    output = GetNormalizedValueByStaticLookup(states, input);
+                    output = GetNormalizedValueByStaticLookup(StatesAndProvinces, input);
                     break;
 
                 case "NUMBER":
@@ -780,24 +813,7 @@
         /// </summary>
         private static void InitializeRegex()
         {
-            var suffixPattern = new Regex(
-                string.Join(
-                    "|",
-                    new[] {
-                        string.Join("|", StreetSuffixes.Keys),
-                        string.Join("|", StreetSuffixes.Values.Distinct())
-                    }),
-                RegexOptions.Compiled);
-
-            var statePattern =
-                @"\b(?:" +
-                string.Join(
-                    "|",
-                    new[] {
-                        string.Join("|", states.Keys.Select(x => Regex.Escape(x))),
-                        string.Join("|", states.Values)
-                    }) +
-                @")\b";
+            var statePattern = StatePattern;
 
             var directionalPattern =
                 string.Join(
@@ -843,7 +859,7 @@
                         )
                     ",
                     directionalPattern,
-                    suffixPattern);
+                    SuffixPattern);
 
             var rangedSecondaryUnitPattern =
                 @"(?<SECONDARYUNIT>" +

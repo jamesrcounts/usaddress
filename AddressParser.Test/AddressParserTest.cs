@@ -265,9 +265,27 @@
         }
 
         [Test]
+        public void VerifyStatePattern()
+        {
+            Approvals.Verify(AddressParser.StatePattern);
+        }
+
+        [Test]
+        public void VerifyStates()
+        {
+            Approvals.VerifyAll(AddressParser.StatesAndProvinces);
+        }
+
+        [Test]
         public void VerifySuffixes()
         {
             Approvals.VerifyAll(AddressParser.StreetSuffixes);
+        }
+
+        [Test]
+        public void VerifySuffixPattern()
+        {
+            Approvals.Verify(AddressParser.SuffixPattern);
         }
 
         private static void VerifyNormalizedAddress(string addressText)
