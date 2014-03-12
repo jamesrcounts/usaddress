@@ -4,6 +4,10 @@ usaddress
 
 Fork of https://usaddress.codeplex.com/
 
+Available on NuGet
+==================
+[Install-Package AddressParser](http://www.nuget.org/packages/AddressParser/)
+
 Icon
 ====
 
