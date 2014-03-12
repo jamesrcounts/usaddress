@@ -264,6 +264,12 @@
             VerifyParsedAddress("999 West 89th Street Apt A New York NY 10024");
         }
 
+        [Test]
+        public void VerifySuffixes()
+        {
+            Approvals.VerifyAll(AddressParser.StreetSuffixes);
+        }
+
         private static void VerifyNormalizedAddress(string addressText)
         {
             var parser = new AddressParser();

@@ -121,13 +121,11 @@
 
         #endregion States
 
-        #region Suffixes
-
         /// <summary>
-        /// Maps lowerecased USPS standard street suffixes to their canonical postal
+        /// Maps lowercase USPS standard street suffixes to their canonical postal
         /// abbreviations as found in TIGER/Line.
         /// </summary>
-        private static Dictionary<string, string> suffixes =
+        private static readonly Dictionary<string, string> Suffixes =
             new Dictionary<string, string>()
             {
                 { "ALLEE", "ALY" },
@@ -494,8 +492,6 @@
                 { "WY", "WAY" }
             };
 
-        #endregion Suffixes
-
         #region Secondary Unit Designators - Ranged
 
         /// <summary>
@@ -590,6 +586,18 @@
 
             // Build the giant regex
             InitializeRegex();
+        }
+
+        /// <summary>
+        /// Maps lowercase USPS standard street suffixes to their canonical postal
+        /// abbreviations as found in TIGER/Line.
+        /// </summary>
+        public static Dictionary<string, string> StreetSuffixes
+        {
+            get
+            {
+                return Suffixes;
+            }
         }
 
         /// <summary>
@@ -740,7 +748,7 @@
                     break;
 
                 case "SUFFIX":
-                    output = GetNormalizedValueByStaticLookup(suffixes, input);
+                    output = GetNormalizedValueByStaticLookup(StreetSuffixes, input);
                     break;
 
                 case "SECONDARYUNIT":
@@ -776,8 +784,8 @@
                 string.Join(
                     "|",
                     new[] {
-                        string.Join("|", suffixes.Keys),
-                        string.Join("|", suffixes.Values.Distinct())
+                        string.Join("|", StreetSuffixes.Keys),
+                        string.Join("|", StreetSuffixes.Values.Distinct())
                     }),
                 RegexOptions.Compiled);
 
