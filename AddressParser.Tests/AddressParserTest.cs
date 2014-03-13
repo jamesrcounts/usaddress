@@ -170,5 +170,11 @@
         {
             Approvals.Verify(AddressParser.SuffixPattern);
         }
+
+        [Fact]
+        public void VerifyZipPattern()
+        {
+            Approvals.Verify(AddressParser.ZipPattern);
+        }
     }
 }

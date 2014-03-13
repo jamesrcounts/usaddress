@@ -653,6 +653,14 @@
             }
         }
 
+        public static string ZipPattern
+        {
+            get
+            {
+                return @"\d{5}(?:-?\d{4})?";
+            }
+        }
+
         /// <summary>
         /// Attempts to parse the given input as a US address.
         /// </summary>
@@ -830,8 +838,6 @@
         /// </summary>
         private static void InitializeRegex()
         {
-            var zipPattern = @"\d{5}(?:-?\d{4})?";
-
             var numberPattern =
                 @"(
                     ((?<NUMBER>\d+)(?<SECONDARYNUMBER>(-[0-9])|(\-?[A-Z]))(?=\b))    # Unit-attached
@@ -909,7 +915,7 @@
                     (?:(?<ZIP>{1}))?
                 ",
                 cityAndStatePattern,
-                zipPattern);
+                ZipPattern);
 
             var addressPattern = string.Format(
                 CultureInfo.InvariantCulture,
@@ -947,7 +953,7 @@
                 streetPattern,
                 allSecondaryUnitPattern,
                 placePattern,
-                zipPattern);
+                ZipPattern);
             addressRegex = new Regex(
                 addressPattern,
                 RegexOptions.Compiled |
