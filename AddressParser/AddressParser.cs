@@ -29,14 +29,11 @@
     /// </summary>
     public class AddressParser
     {
-        #region Directionals
-
         /// <summary>
         /// Maps directional names (north, northeast, etc.) to abbreviations (N, NE, etc.).
         /// </summary>
-        private static Dictionary<string, string> directionals =
-            new Dictionary<string, string>()
-            {
+        private static readonly Dictionary<string, string> Directional =
+            new Dictionary<string, string> {
                 { "NORTH", "N" },
                 { "NORTHEAST", "NE" },
                 { "EAST", "E" },
@@ -46,8 +43,6 @@
                 { "WEST", "W" },
                 { "NORTHWEST", "NW" }
             };
-
-        #endregion Directionals
 
         /// <summary>
         /// Maps lowercase US state and territory names to their canonical two-letter
@@ -121,8 +116,7 @@
         /// abbreviations as found in TIGER/Line.
         /// </summary>
         private static readonly Dictionary<string, string> Suffixes =
-            new Dictionary<string, string>()
-            {
+            new Dictionary<string, string> {
                 { "ALLEE", "ALY" },
                 { "ALLEY", "ALY" },
                 { "ALLY", "ALY" },
@@ -583,6 +577,32 @@
             InitializeRegex();
         }
 
+        /// <summary>
+        /// Maps directional names (north, northeast, etc.) to abbreviations (N, NE, etc.).
+        /// </summary>
+        public static Dictionary<string, string> DirectionalNames
+        {
+            get
+            {
+                return Directional;
+            }
+        }
+
+        public static string DirectionalPattern
+        {
+            get
+            {
+                var directionalPattern = string.Join(
+                    "|",
+                    new[]
+                        {
+                            string.Join("|", DirectionalNames.Keys), string.Join("|", DirectionalNames.Values),
+                            string.Join("|", DirectionalNames.Values.Select(x => Regex.Replace(x, @"(\w)", @"$1\.")))
+                        });
+                return directionalPattern;
+            }
+        }
+
         public static string StatePattern
         {
             get
@@ -777,7 +797,7 @@
             {
                 case "PREDIRECTIONAL":
                 case "POSTDIRECTIONAL":
-                    output = GetNormalizedValueByStaticLookup(directionals, input);
+                    output = GetNormalizedValueByStaticLookup(DirectionalNames, input);
                     break;
 
                 case "SUFFIX":
@@ -799,9 +819,6 @@
                     }
 
                     break;
-
-                default:
-                    break;
             }
 
             return output;
@@ -813,17 +830,6 @@
         /// </summary>
         private static void InitializeRegex()
         {
-            var statePattern = StatePattern;
-
-            var directionalPattern =
-                string.Join(
-                    "|",
-                    new[] {
-                        string.Join("|", directionals.Keys),
-                        string.Join("|", directionals.Values),
-                        string.Join("|", directionals.Values.Select(x => Regex.Replace(x, @"(\w)", @"$1\.")))
-                    });
-
             var zipPattern = @"\d{5}(?:-?\d{4})?";
 
             var numberPattern =
@@ -858,7 +864,7 @@
                           )
                         )
                     ",
-                    directionalPattern,
+                    DirectionalPattern,
                     SuffixPattern);
 
             var rangedSecondaryUnitPattern =
@@ -895,7 +901,7 @@
                         (?<STATE>{0})
                     )
                 ",
-                statePattern);
+                StatePattern);
             var placePattern = string.Format(
                 CultureInfo.InvariantCulture,
                 @"

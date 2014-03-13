@@ -5,8 +5,6 @@ VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressParser", "AddressParser\AddressParser.csproj", "{FCEBD207-0C18-4D92-974C-C7A615AC7DEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressParser.Test", "AddressParser.Test\AddressParser.Test.csproj", "{FB536A0B-D3F2-4DFD-9B19-9DED447636B4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressParser.Driver", "AddressParser.Driver\AddressParser.Driver.csproj", "{800A1F3D-65D5-41C4-899E-A75366950016}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E78609CD-0949-4633-A87F-E6DECF2C7168}"
@@ -15,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E78609
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressParser.Tests", "AddressParser.Tests\AddressParser.Tests.csproj", "{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,16 +36,6 @@ Global
 		{FCEBD207-0C18-4D92-974C-C7A615AC7DEE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{FCEBD207-0C18-4D92-974C-C7A615AC7DEE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FCEBD207-0C18-4D92-974C-C7A615AC7DEE}.Release|x86.ActiveCfg = Release|Any CPU
-		{FB536A0B-D3F2-4DFD-9B19-9DED447636B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB536A0B-D3F2-4DFD-9B19-9DED447636B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB536A0B-D3F2-4DFD-9B19-9DED447636B4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{FB536A0B-D3F2-4DFD-9B19-9DED447636B4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{FB536A0B-D3F2-4DFD-9B19-9DED447636B4}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{FB536A0B-D3F2-4DFD-9B19-9DED447636B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB536A0B-D3F2-4DFD-9B19-9DED447636B4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB536A0B-D3F2-4DFD-9B19-9DED447636B4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{FB536A0B-D3F2-4DFD-9B19-9DED447636B4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{FB536A0B-D3F2-4DFD-9B19-9DED447636B4}.Release|x86.ActiveCfg = Release|Any CPU
 		{800A1F3D-65D5-41C4-899E-A75366950016}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{800A1F3D-65D5-41C4-899E-A75366950016}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{800A1F3D-65D5-41C4-899E-A75366950016}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -56,6 +46,16 @@ Global
 		{800A1F3D-65D5-41C4-899E-A75366950016}.Release|Mixed Platforms.Build.0 = Release|x86
 		{800A1F3D-65D5-41C4-899E-A75366950016}.Release|x86.ActiveCfg = Release|x86
 		{800A1F3D-65D5-41C4-899E-A75366950016}.Release|x86.Build.0 = Release|x86
+		{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
