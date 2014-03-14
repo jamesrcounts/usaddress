@@ -639,6 +639,17 @@
             }
         }
 
+        public static string PlacePattern
+        {
+            get
+            {
+                return string.Format(CultureInfo.InvariantCulture, @"
+                    (?:{0}\W*)?
+                    (?:(?<ZIP>{1}))?
+                ", CityAndStatePattern, ZipPattern);
+            }
+        }
+
         public static string RangedSecondaryUnitPattern
         {
             get
@@ -948,15 +959,6 @@
                     DirectionalPattern,
                     SuffixPattern);
 
-            var placePattern = string.Format(
-                CultureInfo.InvariantCulture,
-                @"
-                    (?:{0}\W*)?
-                    (?:(?<ZIP>{1}))?
-                ",
-                CityAndStatePattern,
-                ZipPattern);
-
             var addressPattern = string.Format(
                 CultureInfo.InvariantCulture,
                 @"
@@ -992,7 +994,7 @@
                 numberPattern,
                 streetPattern,
                 AllSecondaryUnitPattern,
-                placePattern,
+                PlacePattern,
                 ZipPattern);
             addressRegex = new Regex(
                 addressPattern,

@@ -185,6 +185,12 @@
         }
 
         [Fact]
+        public void VerifyPlacePattern()
+        {
+            Approvals.Verify(AddressParser.PlacePattern);
+        }
+
+        [Fact]
         public void VerifyRangedSecondaryUnitPattern()
         {
             Approvals.Verify(AddressParser.RangedSecondaryUnitPattern);
