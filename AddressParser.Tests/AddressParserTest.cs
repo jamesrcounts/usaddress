@@ -136,6 +136,18 @@
         }
 
         [Fact]
+        public void VerifyAllSecondaryUnitPattern()
+        {
+            Approvals.Verify(AddressParser.AllSecondaryUnitPattern);
+        }
+
+        [Fact]
+        public void VerifyAllUnits()
+        {
+            Approvals.VerifyAll(AddressParser.AllUnits);
+        }
+
+        [Fact]
         public void VerifyDirectionalNames()
         {
             Approvals.VerifyAll(AddressParser.DirectionalNames);
@@ -145,6 +157,30 @@
         public void VerifyDirectionalPattern()
         {
             Approvals.Verify(AddressParser.DirectionalPattern);
+        }
+
+        [Fact]
+        public void VerifyRangedSecondaryUnitPattern()
+        {
+            Approvals.Verify(AddressParser.RangedSecondaryUnitPattern);
+        }
+
+        [Fact]
+        public void VerifyRangedUnits()
+        {
+            Approvals.VerifyAll(AddressParser.RangedUnits);
+        }
+
+        [Fact]
+        public void VerifyRangelessSecondaryUnitPattern()
+        {
+            Approvals.Verify(AddressParser.RangelessSecondaryUnitPattern);
+        }
+
+        [Fact]
+        public void VerifyRangelessUnits()
+        {
+            Approvals.VerifyAll(AddressParser.RangelessUnits);
         }
 
         [Fact]

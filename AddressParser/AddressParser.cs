@@ -30,6 +30,11 @@
     public class AddressParser
     {
         /// <summary>
+        /// A combined dictionary of the ranged and rangeless secondary units.
+        /// </summary>
+        private static readonly Dictionary<string, string> AllSecondaryUnits;
+
+        /// <summary>
         /// Maps directional names (north, northeast, etc.) to abbreviations (N, NE, etc.).
         /// </summary>
         private static readonly Dictionary<string, string> Directional =
@@ -42,6 +47,45 @@
                 { "SOUTHWEST", "SW" },
                 { "WEST", "W" },
                 { "NORTHWEST", "NW" }
+            };
+
+        /// <summary>
+        /// Secondary units that require a number after them.
+        /// </summary>
+        private static readonly Dictionary<string, string> RangedSecondaryUnits =
+            new Dictionary<string, string> {
+                { @"SU?I?TE", "STE" },
+                { @"(?:AP)(?:AR)?T(?:ME?NT)?", "APT" },
+                { @"(?:DEP)(?:AR)?T(?:ME?NT)?", "DEPT" },
+                { @"RO*M", "RM" },
+                { @"FLO*R?", "FL" },
+                { @"UNI?T", "UNIT" },
+                { @"BU?I?LDI?N?G", "BLDG" },
+                { @"HA?NGA?R", "HNGR" },
+                { @"KEY", "KEY" },
+                { @"LO?T", "LOT" },
+                { @"PIER", "PIER" },
+                { @"SLIP", "SLIP" },
+                { @"SPA?CE?", "SPACE" },
+                { @"STOP", "STOP" },
+                { @"TRA?I?LE?R", "TRLR" },
+                { @"BOX", "BOX" }
+            };
+
+        /// <summary>
+        /// Secondary units that do not require a number after them.
+        /// </summary>
+        private static readonly Dictionary<string, string> RangelessSecondaryUnits =
+            new Dictionary<string, string> {
+                { "BA?SE?ME?N?T", "BSMT" },
+                { "FRO?NT", "FRNT" },
+                { "LO?BBY", "LBBY" },
+                { "LOWE?R", "LOWR" },
+                { "OFF?I?CE?", "OFC" },
+                { "PE?N?T?HO?U?S?E?", "PH" },
+                { "REAR", "REAR" },
+                { "SIDE", "SIDE" },
+                { "UPPE?R", "UPPR" }
             };
 
         /// <summary>
@@ -481,65 +525,11 @@
                 { "WY", "WAY" }
             };
 
-        #region Secondary Unit Designators - Ranged
-
-        /// <summary>
-        /// Secondary units that require a number after them.
-        /// </summary>
-        private static Dictionary<string, string> rangedSecondaryUnits =
-            new Dictionary<string, string>()
-            {
-                { @"SU?I?TE", "STE" },
-                { @"(?:AP)(?:AR)?T(?:ME?NT)?", "APT" },
-                { @"(?:DEP)(?:AR)?T(?:ME?NT)?", "DEPT" },
-                { @"RO*M", "RM" },
-                { @"FLO*R?", "FL" },
-                { @"UNI?T", "UNIT" },
-                { @"BU?I?LDI?N?G", "BLDG" },
-                { @"HA?NGA?R", "HNGR" },
-                { @"KEY", "KEY" },
-                { @"LO?T", "LOT" },
-                { @"PIER", "PIER" },
-                { @"SLIP", "SLIP" },
-                { @"SPA?CE?", "SPACE" },
-                { @"STOP", "STOP" },
-                { @"TRA?I?LE?R", "TRLR" },
-                { @"BOX", "BOX" }
-            };
-
-        #endregion Secondary Unit Designators - Ranged
-
-        #region Secondary Unit Designators - Rangeless
-
-        /// <summary>
-        /// Secondary units that do not require a number after them.
-        /// </summary>
-        private static Dictionary<string, string> rangelessSecondaryUnits =
-            new Dictionary<string, string>()
-            {
-                { "BA?SE?ME?N?T", "BSMT" },
-                { "FRO?NT", "FRNT" },
-                { "LO?BBY", "LBBY" },
-                { "LOWE?R", "LOWR" },
-                { "OFF?I?CE?", "OFC" },
-                { "PE?N?T?HO?U?S?E?", "PH" },
-                { "REAR", "REAR" },
-                { "SIDE", "SIDE" },
-                { "UPPE?R", "UPPR" }
-            };
-
-        #endregion Secondary Unit Designators - Rangeless
-
         /// <summary>
         /// The gigantic regular expression that actually extracts the bits and pieces
         /// from a given address.
         /// </summary>
         private static Regex addressRegex;
-
-        /// <summary>
-        /// A combined dictionary of the ranged and rangeless secondary units.
-        /// </summary>
-        private static Dictionary<string, string> allSecondaryUnits;
 
         /// <summary>
         /// In the <see cref="M:addressRegex"/> member, these are the names
@@ -569,12 +559,41 @@
             // Build a combined dictionary of both the ranged and rangeless secondary units.
             // This is used by the Normalize() method to convert the unit into the USPS
             // standardized form.
-            allSecondaryUnits = new[] { rangedSecondaryUnits, rangelessSecondaryUnits }
+            AllSecondaryUnits = new[] { RangedUnits, RangelessSecondaryUnits }
                 .SelectMany(x => x)
                 .ToDictionary(y => y.Key, y => y.Value);
 
             // Build the giant regex
             InitializeRegex();
+        }
+
+        public static string AllSecondaryUnitPattern
+        {
+            get
+            {
+                return string.Format(CultureInfo.InvariantCulture, @"
+                    (
+                        (:?
+                            (?: (?:{0} \W*)
+                                | (?<SECONDARYUNIT>\#)\W*
+                            )
+                            (?<SECONDARYNUMBER>[\w-]+)
+                        )
+                        |{1}
+                    ),?
+                ", RangedSecondaryUnitPattern, RangelessSecondaryUnitPattern);
+            }
+        }
+
+        /// <summary>
+        /// A combined dictionary of the ranged and rangeless secondary units.
+        /// </summary>
+        public static Dictionary<string, string> AllUnits
+        {
+            get
+            {
+                return AllSecondaryUnits;
+            }
         }
 
         /// <summary>
@@ -592,14 +611,53 @@
         {
             get
             {
-                var directionalPattern = string.Join(
+                return string.Join(
                     "|",
                     new[]
                         {
                             string.Join("|", DirectionalNames.Keys), string.Join("|", DirectionalNames.Values),
                             string.Join("|", DirectionalNames.Values.Select(x => Regex.Replace(x, @"(\w)", @"$1\.")))
                         });
-                return directionalPattern;
+            }
+        }
+
+        public static string RangedSecondaryUnitPattern
+        {
+            get
+            {
+                return @"(?<SECONDARYUNIT>" + string.Join("|", RangedUnits.Keys)
+                       + @")(?![a-z])";
+            }
+        }
+
+        /// <summary>
+        /// Secondary units that require a number after them.
+        /// </summary>
+        public static Dictionary<string, string> RangedUnits
+        {
+            get
+            {
+                return RangedSecondaryUnits;
+            }
+        }
+
+        public static string RangelessSecondaryUnitPattern
+        {
+            get
+            {
+                return @"(?<SECONDARYUNIT>"
+                       + string.Join("|", string.Join("|", RangelessSecondaryUnits.Keys)) + @")\b";
+            }
+        }
+
+        /// <summary>
+        /// Secondary units that do not require a number after them.
+        /// </summary>
+        public static Dictionary<string, string> RangelessUnits
+        {
+            get
+            {
+                return RangelessSecondaryUnits;
             }
         }
 
@@ -607,15 +665,14 @@
         {
             get
             {
-                var statePattern = @"\b(?:"
-                                   + string.Join(
-                                       "|",
-                                       new[]
-                                           {
-                                               string.Join("|", StatesAndProvinces.Keys.Select(x => Regex.Escape(x))),
-                                               string.Join("|", StatesAndProvinces.Values)
-                                           }) + @")\b";
-                return statePattern;
+                return @"\b(?:"
+                       + string.Join(
+                           "|",
+                           new[]
+                               {
+                                   string.Join("|", StatesAndProvinces.Keys.Select(x => Regex.Escape(x))),
+                                   string.Join("|", StatesAndProvinces.Values)
+                               }) + @")\b";
             }
         }
 
@@ -813,7 +870,7 @@
                     break;
 
                 case "SECONDARYUNIT":
-                    output = GetNormalizedValueByRegexLookup(allSecondaryUnits, input);
+                    output = GetNormalizedValueByRegexLookup(AllUnits, input);
                     break;
 
                 case "STATE":
@@ -873,31 +930,7 @@
                     DirectionalPattern,
                     SuffixPattern);
 
-            var rangedSecondaryUnitPattern =
-                @"(?<SECONDARYUNIT>" +
-                string.Join("|", rangedSecondaryUnits.Keys) +
-                @")(?![a-z])";
-            var rangelessSecondaryUnitPattern =
-                @"(?<SECONDARYUNIT>" +
-                string.Join(
-                    "|",
-                    string.Join("|", rangelessSecondaryUnits.Keys)) +
-                @")\b";
-            var allSecondaryUnitPattern = string.Format(
-                CultureInfo.InvariantCulture,
-                @"
-                    (
-                        (:?
-                            (?: (?:{0} \W*)
-                                | (?<SECONDARYUNIT>\#)\W*
-                            )
-                            (?<SECONDARYNUMBER>[\w-]+)
-                        )
-                        |{1}
-                    ),?
-                ",
-                 rangedSecondaryUnitPattern,
-                 rangelessSecondaryUnitPattern);
+            var allSecondaryUnitPattern = AllSecondaryUnitPattern;
 
             var cityAndStatePattern = string.Format(
                 CultureInfo.InvariantCulture,

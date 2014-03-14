@@ -1,0 +1,16 @@
+﻿(?:AP)(?:AR)?T(?:ME?NT)? => APT
+(?:DEP)(?:AR)?T(?:ME?NT)? => DEPT
+BOX => BOX
+BU?I?LDI?N?G => BLDG
+FLO*R? => FL
+HA?NGA?R => HNGR
+KEY => KEY
+LO?T => LOT
+PIER => PIER
+RO*M => RM
+SLIP => SLIP
+SPA?CE? => SPACE
+STOP => STOP
+SU?I?TE => STE
+TRA?I?LE?R => TRLR
+UNI?T => UNIT

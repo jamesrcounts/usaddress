@@ -1,0 +1,11 @@
+﻿
+                    (
+                        (:?
+                            (?: (?:(?<SECONDARYUNIT>SU?I?TE|(?:AP)(?:AR)?T(?:ME?NT)?|(?:DEP)(?:AR)?T(?:ME?NT)?|RO*M|FLO*R?|UNI?T|BU?I?LDI?N?G|HA?NGA?R|KEY|LO?T|PIER|SLIP|SPA?CE?|STOP|TRA?I?LE?R|BOX)(?![a-z]) \W*)
+                                | (?<SECONDARYUNIT>\#)\W*
+                            )
+                            (?<SECONDARYNUMBER>[\w-]+)
+                        )
+                        |(?<SECONDARYUNIT>BA?SE?ME?N?T|FRO?NT|LO?BBY|LOWE?R|OFF?I?CE?|PE?N?T?HO?U?S?E?|REAR|SIDE|UPPE?R)\b
+                    ),?
+                
