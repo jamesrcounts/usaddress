@@ -161,6 +161,12 @@
         }
 
         [Fact]
+        public void VerifyCityAndStatePattern()
+        {
+            Approvals.Verify(AddressParser.CityAndStatePattern);
+        }
+
+        [Fact]
         public void VerifyDirectionalNames()
         {
             Approvals.VerifyAll(AddressParser.DirectionalNames);

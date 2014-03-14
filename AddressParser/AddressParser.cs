@@ -601,6 +601,19 @@
             }
         }
 
+        public static string CityAndStatePattern
+        {
+            get
+            {
+                return string.Format(CultureInfo.InvariantCulture, @"
+                    (?:
+                        (?<CITY>[^\d,]+?)\W+
+                        (?<STATE>{0})
+                    )
+                ", StatePattern);
+            }
+        }
+
         /// <summary>
         /// Maps directional names (north, northeast, etc.) to abbreviations (N, NE, etc.).
         /// </summary>
@@ -935,24 +948,13 @@
                     DirectionalPattern,
                     SuffixPattern);
 
-            var allSecondaryUnitPattern = AllSecondaryUnitPattern;
-
-            var cityAndStatePattern = string.Format(
-                CultureInfo.InvariantCulture,
-                @"
-                    (?:
-                        (?<CITY>[^\d,]+?)\W+
-                        (?<STATE>{0})
-                    )
-                ",
-                StatePattern);
             var placePattern = string.Format(
                 CultureInfo.InvariantCulture,
                 @"
                     (?:{0}\W*)?
                     (?:(?<ZIP>{1}))?
                 ",
-                cityAndStatePattern,
+                CityAndStatePattern,
                 ZipPattern);
 
             var addressPattern = string.Format(
@@ -989,7 +991,7 @@
                 ",
                 numberPattern,
                 streetPattern,
-                allSecondaryUnitPattern,
+                AllSecondaryUnitPattern,
                 placePattern,
                 ZipPattern);
             addressRegex = new Regex(
