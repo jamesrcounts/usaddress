@@ -717,6 +717,35 @@
             }
         }
 
+        public static string StreetPattern
+        {
+            get
+            {
+                var streetPattern = string.Format(CultureInfo.InvariantCulture, @"
+                        (?:
+                          # special case for addresses like 100 South Street
+                          (?:(?<STREET>{0})\W+
+                             (?<SUFFIX>{1})\b)
+                          |
+                          (?:(?<PREDIRECTIONAL>{0})\W+)?
+                          (?:
+                            (?<STREET>[^,]*\d)
+                            (?:[^\w,]*(?<POSTDIRECTIONAL>{0})\b)
+                           |
+                            (?<STREET>[^,]+)
+                            (?:[^\w,]+(?<SUFFIX>{1})\b)
+                            (?:[^\w,]+(?<POSTDIRECTIONAL>{0})\b)?
+                           |
+                            (?<STREET>[^,]+?)
+                            (?:[^\w,]+(?<SUFFIX>{1})\b)?
+                            (?:[^\w,]+(?<POSTDIRECTIONAL>{0})\b)?
+                          )
+                        )
+                    ", DirectionalPattern, SuffixPattern);
+                return streetPattern;
+            }
+        }
+
         /// <summary>
         /// Maps lowercase USPS standard street suffixes to their canonical postal
         /// abbreviations as found in TIGER/Line.
@@ -932,33 +961,6 @@
                     |(?<NUMBER>[NSWE]\ ?\d+\ ?[NSWE]\ ?\d+)                          # Wisconsin/Illinois
                   )";
 
-            var streetPattern =
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    @"
-                        (?:
-                          # special case for addresses like 100 South Street
-                          (?:(?<STREET>{0})\W+
-                             (?<SUFFIX>{1})\b)
-                          |
-                          (?:(?<PREDIRECTIONAL>{0})\W+)?
-                          (?:
-                            (?<STREET>[^,]*\d)
-                            (?:[^\w,]*(?<POSTDIRECTIONAL>{0})\b)
-                           |
-                            (?<STREET>[^,]+)
-                            (?:[^\w,]+(?<SUFFIX>{1})\b)
-                            (?:[^\w,]+(?<POSTDIRECTIONAL>{0})\b)?
-                           |
-                            (?<STREET>[^,]+?)
-                            (?:[^\w,]+(?<SUFFIX>{1})\b)?
-                            (?:[^\w,]+(?<POSTDIRECTIONAL>{0})\b)?
-                          )
-                        )
-                    ",
-                    DirectionalPattern,
-                    SuffixPattern);
-
             var addressPattern = string.Format(
                 CultureInfo.InvariantCulture,
                 @"
@@ -992,13 +994,11 @@
                     $           # right up to end of string
                 ",
                 numberPattern,
-                streetPattern,
+                StreetPattern,
                 AllSecondaryUnitPattern,
                 PlacePattern,
                 ZipPattern);
-            addressRegex = new Regex(
-                addressPattern,
-                MatchOptions);
+            addressRegex = new Regex(addressPattern, MatchOptions);
         }
 
         /// <summary>

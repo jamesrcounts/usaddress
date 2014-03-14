@@ -227,6 +227,12 @@
         }
 
         [Fact]
+        public void VerifyStreetPattern()
+        {
+            Approvals.Verify(AddressParser.StreetPattern);
+        }
+
+        [Fact]
         public void VerifySuffixes()
         {
             Approvals.VerifyAll(AddressParser.StreetSuffixes);
