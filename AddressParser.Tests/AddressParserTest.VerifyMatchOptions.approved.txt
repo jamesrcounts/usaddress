@@ -1,0 +1,1 @@
+﻿IgnoreCase, Compiled, Singleline, IgnorePatternWhitespace

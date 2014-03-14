@@ -6,6 +6,6 @@
                             )
                             (?<SECONDARYNUMBER>[\w-]+)
                         )
-                        |(?<SECONDARYUNIT>BA?SE?ME?N?T|FRO?NT|LO?BBY|LOWE?R|OFF?I?CE?|PE?N?T?HO?U?S?E?|REAR|SIDE|UPPE?R)\b
+                        |\b(?<SECONDARYUNIT>BA?SE?ME?N?T|FRO?NT|LO?BBY|LOWE?R|OFF?I?CE?|PE?N?T?HO?U?S?E?|REAR|SIDE|UPPE?R)\b
                     ),?
                 

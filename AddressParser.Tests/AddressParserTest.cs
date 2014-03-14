@@ -1,6 +1,11 @@
 ﻿namespace AddressParser.Tests
 {
+    using System.Linq;
+    using System.Text.RegularExpressions;
+
     using ApprovalTests;
+
+    using ApprovalUtilities.Utilities;
 
     using Xunit;
 
@@ -130,6 +135,14 @@
         }
 
         [Fact]
+        public void MatchSecondaryUnitAsWord()
+        {
+            var streets = new[] { "9999 RIVERSIDE DR WEST #8B", "9999 RIVERSIDE DR WEST SIDE LEFT", };
+            var results = streets.Select(s => new { Text = s, Match = Regex.Match(s, AddressParser.RangelessSecondaryUnitPattern, AddressParser.MatchOptions) });
+            Approvals.VerifyAll(results, "Match");
+        }
+
+        [Fact]
         public void ParseWithoutNormalization()
         {
             Approvals.Verify(Parser.ParseAddress("999 West 89th Street Apt A New York NY 10024", false));
@@ -157,6 +170,12 @@
         public void VerifyDirectionalPattern()
         {
             Approvals.Verify(AddressParser.DirectionalPattern);
+        }
+
+        [Fact]
+        public void VerifyMatchOptions()
+        {
+            Approvals.Verify(AddressParser.MatchOptions);
         }
 
         [Fact]

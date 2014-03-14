@@ -29,6 +29,11 @@
     /// </summary>
     public class AddressParser
     {
+        public const RegexOptions MatchOptions = RegexOptions.Compiled |
+                                                 RegexOptions.Singleline |
+                                                 RegexOptions.IgnorePatternWhitespace |
+                                                 RegexOptions.IgnoreCase;
+
         /// <summary>
         /// A combined dictionary of the ranged and rangeless secondary units.
         /// </summary>
@@ -645,7 +650,7 @@
         {
             get
             {
-                return @"(?<SECONDARYUNIT>"
+                return @"\b(?<SECONDARYUNIT>"
                        + string.Join("|", string.Join("|", RangelessSecondaryUnits.Keys)) + @")\b";
             }
         }
@@ -989,10 +994,7 @@
                 ZipPattern);
             addressRegex = new Regex(
                 addressPattern,
-                RegexOptions.Compiled |
-                RegexOptions.Singleline |
-                RegexOptions.IgnorePatternWhitespace |
-                RegexOptions.IgnoreCase);
+                MatchOptions);
         }
 
         /// <summary>
