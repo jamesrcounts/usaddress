@@ -9,25 +9,14 @@
 
     public class AddressParserTest
     {
-        private static readonly AddressParser Parser = new AddressParser();
+        private static readonly AddressParser Parser = AddressParser.Default;
 
         [Fact]
         public void AddressRegexIsLazy()
         {
-            var streetSuffixes = AddressParser.StreetSuffixes;
-            try
-            {
-                //      AddressParser.StreetSuffixes.Add("EDGE", "EDGE");
-                Approvals.Verify(AddressParser.AddressRegex);
-            }
-            finally
-            {
-                AddressParser.StreetSuffixes.Clear();
-                foreach (var streetSuffix in streetSuffixes)
-                {
-                    AddressParser.StreetSuffixes.Add(streetSuffix.Key, streetSuffix.Value);
-                }
-            }
+            var addressParser = new AddressParser();
+            addressParser.StreetSuffixes.Add("EDGE", "EDGE");
+            Approvals.Verify(addressParser.AddressRegex);
         }
 
         /// <summary>
@@ -155,7 +144,7 @@
         public void MatchSecondaryUnitAsWord()
         {
             var streets = new[] { "9999 RIVERSIDE DR WEST #8B", "9999 RIVERSIDE DR WEST SIDE LEFT", };
-            var results = streets.Select(s => new { Text = s, Match = Regex.Match(s, AddressParser.RangelessSecondaryUnitPattern, AddressParser.MatchOptions) });
+            var results = streets.Select(s => new { Text = s, Match = Regex.Match(s, AddressParser.Default.RangelessSecondaryUnitPattern, AddressParser.MatchOptions) });
             Approvals.VerifyAll(results, "Match");
         }
 
@@ -168,31 +157,31 @@
         [Fact]
         public void VerifyAllSecondaryUnitPattern()
         {
-            Approvals.Verify(AddressParser.AllSecondaryUnitPattern);
+            Approvals.Verify(AddressParser.Default.AllSecondaryUnitPattern);
         }
 
         [Fact]
         public void VerifyAllUnits()
         {
-            Approvals.VerifyAll(AddressParser.AllUnits);
+            Approvals.VerifyAll(AddressParser.Default.AllUnits);
         }
 
         [Fact]
         public void VerifyCityAndStatePattern()
         {
-            Approvals.Verify(AddressParser.CityAndStatePattern);
+            Approvals.Verify(AddressParser.Default.CityAndStatePattern);
         }
 
         [Fact]
         public void VerifyDirectionalNames()
         {
-            Approvals.VerifyAll(AddressParser.DirectionalNames);
+            Approvals.VerifyAll(AddressParser.Default.DirectionalNames);
         }
 
         [Fact]
         public void VerifyDirectionalPattern()
         {
-            Approvals.Verify(AddressParser.DirectionalPattern);
+            Approvals.Verify(AddressParser.Default.DirectionalPattern);
         }
 
         [Fact]
@@ -204,67 +193,67 @@
         [Fact]
         public void VerifyPlacePattern()
         {
-            Approvals.Verify(AddressParser.PlacePattern);
+            Approvals.Verify(AddressParser.Default.PlacePattern);
         }
 
         [Fact]
         public void VerifyRangedSecondaryUnitPattern()
         {
-            Approvals.Verify(AddressParser.RangedSecondaryUnitPattern);
+            Approvals.Verify(AddressParser.Default.RangedSecondaryUnitPattern);
         }
 
         [Fact]
         public void VerifyRangedUnits()
         {
-            Approvals.VerifyAll(AddressParser.RangedUnits);
+            Approvals.VerifyAll(AddressParser.Default.RangedUnits);
         }
 
         [Fact]
         public void VerifyRangelessSecondaryUnitPattern()
         {
-            Approvals.Verify(AddressParser.RangelessSecondaryUnitPattern);
+            Approvals.Verify(AddressParser.Default.RangelessSecondaryUnitPattern);
         }
 
         [Fact]
         public void VerifyRangelessUnits()
         {
-            Approvals.VerifyAll(AddressParser.RangelessUnits);
+            Approvals.VerifyAll(AddressParser.Default.RangelessUnits);
         }
 
         [Fact]
         public void VerifyStatePattern()
         {
-            Approvals.Verify(AddressParser.StatePattern);
+            Approvals.Verify(AddressParser.Default.StatePattern);
         }
 
         [Fact]
         public void VerifyStates()
         {
-            Approvals.VerifyAll(AddressParser.StatesAndProvinces);
+            Approvals.VerifyAll(AddressParser.Default.StatesAndProvinces);
         }
 
         [Fact]
         public void VerifyStreetPattern()
         {
-            Approvals.Verify(AddressParser.StreetPattern);
+            Approvals.Verify(AddressParser.Default.StreetPattern);
         }
 
         [Fact]
         public void VerifySuffixes()
         {
-            Approvals.VerifyAll(AddressParser.StreetSuffixes);
+            Approvals.VerifyAll(AddressParser.Default.StreetSuffixes);
         }
 
         [Fact]
         public void VerifySuffixPattern()
         {
-            Approvals.Verify(AddressParser.SuffixPattern);
+            Approvals.Verify(AddressParser.Default.SuffixPattern);
         }
 
         [Fact]
         public void VerifyZipPattern()
         {
-            Approvals.Verify(AddressParser.ZipPattern);
+            Approvals.Verify(AddressParser.Default.ZipPattern);
         }
     }
 }

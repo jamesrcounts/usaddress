@@ -27,7 +27,7 @@
                     )
                     |
                     (
-                        [^\w\#]*    # skip non-word chars except # (eg unit)
+                        [^\w\#]*    # skip non-word chars except # (e.g. unit)
                         (  (
                     ((?<NUMBER>\d+)(?<SECONDARYNUMBER>(-[0-9])|(\-?[A-Z]))(?=\b))    # Unit-attached
                     |(?<NUMBER>\d+[\-\ ]?\d+\/\d+)                                   # Fractional
