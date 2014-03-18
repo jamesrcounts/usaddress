@@ -755,8 +755,7 @@
         {
             get
             {
-                return @"\b(?<SECONDARYUNIT>" + string.Join("|", string.Join("|", this.rangelessSecondaryUnits.Keys))
-                       + @")\b";
+                return string.Format(@"\b(?<SECONDARYUNIT>{0})\b", string.Join("|", this.rangelessSecondaryUnits.Keys));
             }
         }
 
