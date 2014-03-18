@@ -35,11 +35,6 @@
                                                  RegexOptions.IgnoreCase;
 
         /// <summary>
-        /// A combined dictionary of the ranged and rangeless secondary units.
-        /// </summary>
-        private static readonly Dictionary<string, string> AllSecondaryUnits;
-
-        /// <summary>
         /// Maps directional names (north, northeast, etc.) to abbreviations (N, NE, etc.).
         /// </summary>
         private static readonly Dictionary<string, string> Directional =
@@ -53,6 +48,24 @@
                 { "WEST", "W" },
                 { "NORTHWEST", "NW" }
             };
+
+        /// <summary>
+        /// In the <see cref="M:addressRegex"/> member, these are the names
+        /// of the groups in the result that we care to inspect.
+        /// </summary>
+        private static readonly string[] Fields = {
+                                                      "NUMBER",
+                                                      "PREDIRECTIONAL",
+                                                      "STREET",
+                                                      "STREETLINE",
+                                                      "SUFFIX",
+                                                      "POSTDIRECTIONAL",
+                                                      "CITY",
+                                                      "STATE",
+                                                      "ZIP",
+                                                      "SECONDARYUNIT",
+                                                      "SECONDARYNUMBER"
+                                                  };
 
         /// <summary>
         /// Secondary units that require a number after them.
@@ -537,39 +550,20 @@
         private static Regex addressRegex;
 
         /// <summary>
-        /// In the <see cref="M:addressRegex"/> member, these are the names
-        /// of the groups in the result that we care to inspect.
+        /// A combined dictionary of the ranged and not ranged secondary units.
         /// </summary>
-        private static string[] fields =
-            new[]
-            {
-                "NUMBER",
-                "PREDIRECTIONAL",
-                "STREET",
-                "STREETLINE",
-                "SUFFIX",
-                "POSTDIRECTIONAL",
-                "CITY",
-                "STATE",
-                "ZIP",
-                "SECONDARYUNIT",
-                "SECONDARYNUMBER"
-            };
+        private static Dictionary<string, string> allSecondaryUnits;
 
         /// <summary>
-        /// Initializes the <see cref="AddressParser"/> class.
+        /// The gigantic regular expression that actually extracts the bits and pieces
+        /// from a given address.
         /// </summary>
-        static AddressParser()
+        public static Regex AddressRegex
         {
-            // Build a combined dictionary of both the ranged and rangeless secondary units.
-            // This is used by the Normalize() method to convert the unit into the USPS
-            // standardized form.
-            AllSecondaryUnits = new[] { RangedUnits, RangelessSecondaryUnits }
-                .SelectMany(x => x)
-                .ToDictionary(y => y.Key, y => y.Value);
-
-            // Build the giant regex
-            InitializeRegex();
+            get
+            {
+                return addressRegex ?? (addressRegex = InitializeRegex());
+            }
         }
 
         public static string AllSecondaryUnitPattern
@@ -591,13 +585,13 @@
         }
 
         /// <summary>
-        /// A combined dictionary of the ranged and rangeless secondary units.
+        /// A combined dictionary of the ranged and not ranged secondary units.
         /// </summary>
         public static Dictionary<string, string> AllUnits
         {
             get
             {
-                return AllSecondaryUnits;
+                return allSecondaryUnits ?? (allSecondaryUnits = CombineSecondaryUnits());
             }
         }
 
@@ -699,7 +693,7 @@
                            "|",
                            new[]
                                {
-                                   string.Join("|", StatesAndProvinces.Keys.Select(x => Regex.Escape(x))),
+                                   string.Join("|", StatesAndProvinces.Keys.Select(Regex.Escape)),
                                    string.Join("|", StatesAndProvinces.Values)
                                }) + @")\b";
             }
@@ -721,7 +715,7 @@
         {
             get
             {
-                var streetPattern = string.Format(CultureInfo.InvariantCulture, @"
+                return string.Format(CultureInfo.InvariantCulture, @"
                         (?:
                           # special case for addresses like 100 South Street
                           (?:(?<STREET>{0})\W+
@@ -742,7 +736,6 @@
                           )
                         )
                     ", DirectionalPattern, SuffixPattern);
-                return streetPattern;
             }
         }
 
@@ -764,7 +757,7 @@
             {
                 return string.Join(
                     "|",
-                    new[] { string.Join("|", StreetSuffixes.Values.Distinct()), string.Join("|", StreetSuffixes.Keys), });
+                    StreetSuffixes.Values.Concat(StreetSuffixes.Keys).OrderBy(k => k).Distinct());
             }
         }
 
@@ -780,8 +773,9 @@
         /// Attempts to parse the given input as a US address.
         /// </summary>
         /// <param name="input">The input string.</param>
-        /// <param name="b"></param>
-        /// <returns>The parsed address, or null if the address could not be parsed.</returns>
+        /// <returns>
+        /// The parsed address, or null if the address could not be parsed.
+        /// </returns>
         public AddressParseResult ParseAddress(string input)
         {
             return ParseAddress(input, true);
@@ -807,7 +801,7 @@
                 input = input.ToUpperInvariant();
             }
 
-            var match = addressRegex.Match(input);
+            var match = AddressRegex.Match(input);
             if (!match.Success)
             {
                 return null;
@@ -822,6 +816,16 @@
             return new AddressParseResult(extracted);
         }
 
+        private static Dictionary<string, string> CombineSecondaryUnits()
+        {
+            // Build a combined dictionary of both the ranged and rangeless secondary units.
+            // This is used by the Normalize() method to convert the unit into the USPS
+            // standardized form.
+            return new[] { RangedUnits, RangelessSecondaryUnits }
+                .SelectMany(x => x)
+                .ToDictionary(y => y.Key, y => y.Value);
+        }
+
         /// <summary>
         /// Given a successful <see cref="Match"/>, this method creates a dictionary
         /// consisting of the fields that we actually care to extract from the address.
@@ -833,9 +837,9 @@
         {
             var applicable = new Dictionary<string, string>();
 
-            foreach (var field in addressRegex.GetGroupNames())
+            foreach (var field in AddressRegex.GetGroupNames())
             {
-                if (!fields.Contains(field))
+                if (!Fields.Contains(field))
                 {
                     continue;
                 }
@@ -951,10 +955,9 @@
         /// Builds the gigantic regular expression stored in the addressRegex static
         /// member that actually does the parsing.
         /// </summary>
-        private static void InitializeRegex()
+        private static Regex InitializeRegex()
         {
-            var numberPattern =
-                @"(
+            const string NumberPattern = @"(
                     ((?<NUMBER>\d+)(?<SECONDARYNUMBER>(-[0-9])|(\-?[A-Z]))(?=\b))    # Unit-attached
                     |(?<NUMBER>\d+[\-\ ]?\d+\/\d+)                                   # Fractional
                     |(?<NUMBER>\d+-?\d*)                                             # Normal Number
@@ -993,12 +996,12 @@
                     )
                     $           # right up to end of string
                 ",
-                numberPattern,
+                NumberPattern,
                 StreetPattern,
                 AllSecondaryUnitPattern,
                 PlacePattern,
                 ZipPattern);
-            addressRegex = new Regex(addressPattern, MatchOptions);
+            return new Regex(addressPattern, MatchOptions);
         }
 
         /// <summary>

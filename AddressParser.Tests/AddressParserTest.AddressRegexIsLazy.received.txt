@@ -1,4 +1,40 @@
 ﻿
+                    ^
+                    # Special case for APO/FPO/DPO addresses
+                    (
+                        [^\w\#]*
+                        (?<STREETLINE>.+?)
+                        (?<CITY>[AFD]PO)\W+
+                        (?<STATE>A[AEP])\W+
+                        (?<ZIP>\d{5}(?:-?\d{4})?)
+                        \W*
+                    )
+                    |
+                    # Special case for PO boxes
+                    (
+                        \W*
+                        (?<STREETLINE>(P[\.\ ]?O[\.\ ]?\ )?BOX\ [0-9]+)\W+
+                        
+                    (?:
+                    (?:
+                        (?<CITY>[^\d,]+?)\W+
+                        (?<STATE>\b(?:ALABAMA|ALASKA|AMERICAN\ SAMOA|ARIZONA|ARKANSAS|CALIFORNIA|COLORADO|CONNECTICUT|DELAWARE|DISTRICT\ OF\ COLUMBIA|FEDERATED\ STATES\ OF\ MICRONESIA|FLORIDA|GEORGIA|GUAM|HAWAII|IDAHO|ILLINOIS|INDIANA|IOWA|KANSAS|KENTUCKY|LOUISIANA|MAINE|MARSHALL\ ISLANDS|MARYLAND|MASSACHUSETTS|MICHIGAN|MINNESOTA|MISSISSIPPI|MISSOURI|MONTANA|NEBRASKA|NEVADA|NEW\ HAMPSHIRE|NEW\ JERSEY|NEW\ MEXICO|NEW\ YORK|NORTH\ CAROLINA|NORTH\ DAKOTA|NORTHERN\ MARIANA\ ISLANDS|OHIO|OKLAHOMA|OREGON|PALAU|PENNSYLVANIA|PUERTO\ RICO|RHODE\ ISLAND|SOUTH\ CAROLINA|SOUTH\ DAKOTA|TENNESSEE|TEXAS|UTAH|VERMONT|VIRGIN\ ISLANDS|VIRGINIA|WASHINGTON|WEST\ VIRGINIA|WISCONSIN|WYOMING|AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FM|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MH|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VI|VA|WA|WV|WI|WY)\b)
+                    )
+                \W*)?
+                    (?:(?<ZIP>\d{5}(?:-?\d{4})?))?
+                
+                        \W*
+                    )
+                    |
+                    (
+                        [^\w\#]*    # skip non-word chars except # (eg unit)
+                        (  (
+                    ((?<NUMBER>\d+)(?<SECONDARYNUMBER>(-[0-9])|(\-?[A-Z]))(?=\b))    # Unit-attached
+                    |(?<NUMBER>\d+[\-\ ]?\d+\/\d+)                                   # Fractional
+                    |(?<NUMBER>\d+-?\d*)                                             # Normal Number
+                    |(?<NUMBER>[NSWE]\ ?\d+\ ?[NSWE]\ ?\d+)                          # Wisconsin/Illinois
+                  ) )\W*
+                           
                         (?:
                           # special case for addresses like 100 South Street
                           (?:(?<STREET>NORTH|NORTHEAST|EAST|SOUTHEAST|SOUTH|SOUTHWEST|WEST|NORTHWEST|N|NE|E|SE|S|SW|W|NW|N\.|N\.E\.|E\.|S\.E\.|S\.|S\.W\.|W\.|N\.W\.)\W+
@@ -18,4 +54,28 @@
                             (?:[^\w,]+(?<POSTDIRECTIONAL>NORTH|NORTHEAST|EAST|SOUTHEAST|SOUTH|SOUTHWEST|WEST|NORTHWEST|N|NE|E|SE|S|SW|W|NW|N\.|N\.E\.|E\.|S\.E\.|S\.|S\.W\.|W\.|N\.W\.)\b)?
                           )
                         )
-                    
+                    \W+
+                        (?:
+                    (
+                        (:?
+                            (?: (?:(?<SECONDARYUNIT>SU?I?TE|(?:AP)(?:AR)?T(?:ME?NT)?|(?:DEP)(?:AR)?T(?:ME?NT)?|RO*M|FLO*R?|UNI?T|BU?I?LDI?N?G|HA?NGA?R|KEY|LO?T|PIER|SLIP|SPA?CE?|STOP|TRA?I?LE?R|BOX)(?![a-z]) \W*)
+                                | (?<SECONDARYUNIT>\#)\W*
+                            )
+                            (?<SECONDARYNUMBER>[\w-]+)
+                        )
+                        |\b(?<SECONDARYUNIT>BA?SE?ME?N?T|FRO?NT|LO?BBY|LOWE?R|OFF?I?CE?|PE?N?T?HO?U?S?E?|REAR|SIDE|UPPE?R)\b
+                    ),?
+                \W+)?
+                           
+                    (?:
+                    (?:
+                        (?<CITY>[^\d,]+?)\W+
+                        (?<STATE>\b(?:ALABAMA|ALASKA|AMERICAN\ SAMOA|ARIZONA|ARKANSAS|CALIFORNIA|COLORADO|CONNECTICUT|DELAWARE|DISTRICT\ OF\ COLUMBIA|FEDERATED\ STATES\ OF\ MICRONESIA|FLORIDA|GEORGIA|GUAM|HAWAII|IDAHO|ILLINOIS|INDIANA|IOWA|KANSAS|KENTUCKY|LOUISIANA|MAINE|MARSHALL\ ISLANDS|MARYLAND|MASSACHUSETTS|MICHIGAN|MINNESOTA|MISSISSIPPI|MISSOURI|MONTANA|NEBRASKA|NEVADA|NEW\ HAMPSHIRE|NEW\ JERSEY|NEW\ MEXICO|NEW\ YORK|NORTH\ CAROLINA|NORTH\ DAKOTA|NORTHERN\ MARIANA\ ISLANDS|OHIO|OKLAHOMA|OREGON|PALAU|PENNSYLVANIA|PUERTO\ RICO|RHODE\ ISLAND|SOUTH\ CAROLINA|SOUTH\ DAKOTA|TENNESSEE|TEXAS|UTAH|VERMONT|VIRGIN\ ISLANDS|VIRGINIA|WASHINGTON|WEST\ VIRGINIA|WISCONSIN|WYOMING|AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FM|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MH|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VI|VA|WA|WV|WI|WY)\b)
+                    )
+                \W*)?
+                    (?:(?<ZIP>\d{5}(?:-?\d{4})?))?
+                
+                        \W*         # require on non-word chars at end
+                    )
+                    $           # right up to end of string
+                

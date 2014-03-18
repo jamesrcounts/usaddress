@@ -5,13 +5,30 @@
 
     using ApprovalTests;
 
-    using ApprovalUtilities.Utilities;
-
     using Xunit;
 
     public class AddressParserTest
     {
         private static readonly AddressParser Parser = new AddressParser();
+
+        [Fact]
+        public void AddressRegexIsLazy()
+        {
+            var streetSuffixes = AddressParser.StreetSuffixes;
+            try
+            {
+                //      AddressParser.StreetSuffixes.Add("EDGE", "EDGE");
+                Approvals.Verify(AddressParser.AddressRegex);
+            }
+            finally
+            {
+                AddressParser.StreetSuffixes.Clear();
+                foreach (var streetSuffix in streetSuffixes)
+                {
+                    AddressParser.StreetSuffixes.Add(streetSuffix.Key, streetSuffix.Value);
+                }
+            }
+        }
 
         /// <summary>
         /// People in Wisconsin and Illinois are eating too much cheese, apparently, because
