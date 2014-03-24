@@ -1,4 +1,4 @@
-﻿namespace AddressParser
+﻿namespace USAddress
 {
     using System.Collections.Generic;
     using System.Globalization;
@@ -56,9 +56,9 @@
         /// </summary>
         private readonly string[] fields =
             {
-                "NUMBER", "PREDIRECTIONAL", "STREET", "STREETLINE", "SUFFIX",
-                "POSTDIRECTIONAL", "CITY", "STATE", "ZIP", "SECONDARYUNIT",
-                "SECONDARYNUMBER"
+                Components.Number, Components.Predirectional, Components.Street, Components.StreetLine, Components.Suffix,
+                Components.Postdirectional, Components.City, Components.State, Components.Zip, Components.SecondaryUnit,
+                Components.SecondaryNumber
             };
 
         /// <summary>
@@ -642,6 +642,14 @@
             }
         }
 
+        public static string ZipPattern
+        {
+            get
+            {
+                return @"\d{5}(?:-?\d{4})?";
+            }
+        }
+
         /// <summary>
         /// The gigantic regular expression that actually extracts the bits and pieces
         /// from a given address.
@@ -662,13 +670,13 @@
                     (
                         (:?
                             (?: (?:{0} \W*)
-                                | (?<SECONDARYUNIT>\#)\W*
+                                | (?<{2}>\#)\W*
                             )
-                            (?<SECONDARYNUMBER>[\w-]+)
+                            (?<{3}>[\w-]+)
                         )
                         |{1}
                     ),?
-                ", RangedSecondaryUnitPattern, RangelessSecondaryUnitPattern);
+                ", RangedSecondaryUnitPattern, RangelessSecondaryUnitPattern, Components.SecondaryUnit, Components.SecondaryNumber);
             }
         }
 
@@ -689,10 +697,10 @@
             {
                 return string.Format(CultureInfo.InvariantCulture, @"
                     (?:
-                        (?<CITY>[^\d,]+?)\W+
-                        (?<STATE>{0})
+                        (?<{1}>[^\d,]+?)\W+
+                        (?<{2}>{0})
                     )
-                ", this.StatePattern);
+                ", this.StatePattern, Components.City, Components.State);
             }
         }
 
@@ -727,8 +735,8 @@
             {
                 return string.Format(CultureInfo.InvariantCulture, @"
                     (?:{0}\W*)?
-                    (?:(?<ZIP>{1}))?
-                ", this.CityAndStatePattern, ZipPattern);
+                    (?:(?<{2}>{1}))?
+                ", this.CityAndStatePattern, ZipPattern, Components.Zip);
             }
         }
 
@@ -736,7 +744,7 @@
         {
             get
             {
-                return @"(?<SECONDARYUNIT>" + string.Join("|", this.RangedUnits.Keys) + @")(?![a-z])";
+                return string.Format(CultureInfo.InvariantCulture, @"(?<{1}>{0})(?![a-z])", string.Join("|", this.RangedUnits.Keys), Components.SecondaryUnit);
             }
         }
 
@@ -755,7 +763,10 @@
         {
             get
             {
-                return string.Format(@"\b(?<SECONDARYUNIT>{0})\b", string.Join("|", this.rangelessSecondaryUnits.Keys));
+                return string.Format(
+                    CultureInfo.InvariantCulture,
+                    @"\b(?<{1}>{0})\b",
+                    string.Join("|", this.rangelessSecondaryUnits.Keys), Components.SecondaryUnit);
             }
         }
 
@@ -804,24 +815,24 @@
                 return string.Format(CultureInfo.InvariantCulture, @"
                         (?:
                           # special case for addresses like 100 South Street
-                          (?:(?<STREET>{0})\W+
-                             (?<SUFFIX>{1})\b)
+                          (?:(?<{2}>{0})\W+
+                             (?<{3}>{1})\b)
                           |
-                          (?:(?<PREDIRECTIONAL>{0})\W+)?
+                          (?:(?<{4}>{0})\W+)?
                           (?:
-                            (?<STREET>[^,]*\d)
-                            (?:[^\w,]*(?<POSTDIRECTIONAL>{0})\b)
+                            (?<{2}>[^,]*\d)
+                            (?:[^\w,]*(?<{5}>{0})\b)
                            |
-                            (?<STREET>[^,]+)
-                            (?:[^\w,]+(?<SUFFIX>{1})\b)
-                            (?:[^\w,]+(?<POSTDIRECTIONAL>{0})\b)?
+                            (?<{2}>[^,]+)
+                            (?:[^\w,]+(?<{3}>{1})\b)
+                            (?:[^\w,]+(?<{5}>{0})\b)?
                            |
-                            (?<STREET>[^,]+?)
-                            (?:[^\w,]+(?<SUFFIX>{1})\b)?
-                            (?:[^\w,]+(?<POSTDIRECTIONAL>{0})\b)?
+                            (?<{2}>[^,]+?)
+                            (?:[^\w,]+(?<{3}>{1})\b)?
+                            (?:[^\w,]+(?<{5}>{0})\b)?
                           )
                         )
-                    ", DirectionalPattern, this.SuffixPattern);
+                    ", DirectionalPattern, this.SuffixPattern, Components.Street, Components.Suffix, Components.Predirectional, Components.Postdirectional);
             }
         }
 
@@ -842,14 +853,6 @@
             get
             {
                 return string.Join("|", StreetSuffixes.Values.Concat(StreetSuffixes.Keys).OrderBy(k => k).Distinct());
-            }
-        }
-
-        public string ZipPattern
-        {
-            get
-            {
-                return @"\d{5}(?:-?\d{4})?";
             }
         }
 
@@ -999,24 +1002,24 @@
 
             switch (field)
             {
-                case "PREDIRECTIONAL":
-                case "POSTDIRECTIONAL":
+                case Components.Predirectional:
+                case Components.Postdirectional:
                     output = GetNormalizedValueByStaticLookup(DirectionalNames, input);
                     break;
 
-                case "SUFFIX":
+                case Components.Suffix:
                     output = GetNormalizedValueByStaticLookup(this.StreetSuffixes, input);
                     break;
 
-                case "SECONDARYUNIT":
+                case Components.SecondaryUnit:
                     output = GetNormalizedValueByRegexLookup(AllUnits, input);
                     break;
 
-                case "STATE":
+                case Components.State:
                     output = GetNormalizedValueByStaticLookup(StatesAndProvinces, input);
                     break;
 
-                case "NUMBER":
+                case Components.Number:
                     if (!input.Contains('/'))
                     {
                         output = input.Replace(" ", string.Empty);
@@ -1034,29 +1037,34 @@
         /// </summary>
         private Regex InitializeRegex()
         {
-            const string NumberPattern = @"(
-                    ((?<NUMBER>\d+)(?<SECONDARYNUMBER>(-[0-9])|(\-?[A-Z]))(?=\b))    # Unit-attached
-                    |(?<NUMBER>\d+[\-\ ]?\d+\/\d+)                                   # Fractional
-                    |(?<NUMBER>\d+-?\d*)                                             # Normal Number
-                    |(?<NUMBER>[NSWE]\ ?\d+\ ?[NSWE]\ ?\d+)                          # Wisconsin/Illinois
-                  )";
+            var numberPattern = string.Format(
+                CultureInfo.InvariantCulture,
+@"(
+                    ((?<{0}>\d+)(?<{1}>(-[0-9])|(\-?[A-Z]))(?=\b))    # Unit-attached
+                    |(?<{0}>\d+[\-\ ]?\d+\/\d+)                                   # Fractional
+                    |(?<{0}>\d+-?\d*)                                             # Normal Number
+                    |(?<{0}>[NSWE]\ ?\d+\ ?[NSWE]\ ?\d+)                          # Wisconsin/Illinois
+                  )",
+                    Components.Number,
+                    Components.SecondaryNumber);
 
-            var addressPattern = string.Format(CultureInfo.InvariantCulture, @"
+            var addressPattern = string.Format(CultureInfo.InvariantCulture,
+@"
                     ^
                     # Special case for APO/FPO/DPO addresses
                     (
                         [^\w\#]*
-                        (?<STREETLINE>.+?)
-                        (?<CITY>[AFD]PO)\W+
-                        (?<STATE>A[AEP])\W+
-                        (?<ZIP>{4})
+                        (?<{5}>.+?)
+                        (?<{6}>[AFD]PO)\W+
+                        (?<{7}>A[AEP])\W+
+                        (?<{8}>{4})
                         \W*
                     )
                     |
                     # Special case for PO boxes
                     (
                         \W*
-                        (?<STREETLINE>(P[\.\ ]?O[\.\ ]?\ )?BOX\ [0-9]+)\W+
+                        (?<" + @"{5}" + @">(P[\.\ ]?O[\.\ ]?\ )?BOX\ [0-9]+)\W+
                         {3}
                         \W*
                     )
@@ -1070,7 +1078,13 @@
                         \W*         # require on non-word chars at end
                     )
                     $           # right up to end of string
-                ", NumberPattern, this.StreetPattern, AllSecondaryUnitPattern, PlacePattern, ZipPattern);
+                ",
+                 numberPattern,
+                 this.StreetPattern,
+                 this.AllSecondaryUnitPattern,
+                 this.PlacePattern,
+                 ZipPattern,
+                 Components.StreetLine, Components.City, Components.State, Components.Zip);
             return new Regex(addressPattern, MatchOptions);
         }
 
@@ -1100,10 +1114,10 @@
             }
 
             // Special case for an attached unit
-            if (extracted.ContainsKey("SECONDARYNUMBER")
-                && (!extracted.ContainsKey("SECONDARYUNIT") || string.IsNullOrWhiteSpace(extracted["SECONDARYUNIT"])))
+            if (extracted.ContainsKey(Components.SecondaryNumber)
+                && (!extracted.ContainsKey(Components.SecondaryUnit) || string.IsNullOrWhiteSpace(extracted[Components.SecondaryUnit])))
             {
-                normalized["SECONDARYUNIT"] = "APT";
+                normalized[Components.SecondaryUnit] = "APT";
             }
 
             return normalized;

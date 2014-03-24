@@ -1,9 +1,7 @@
-﻿namespace AddressParser
+﻿namespace USAddress
 {
-    using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Reflection;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -11,6 +9,8 @@
     /// </summary>
     public class AddressParseResult
     {
+        private readonly Dictionary<string, string> fields;
+
         /// <summary>
         /// The street line.
         /// </summary>
@@ -20,30 +20,9 @@
         /// Initializes a new instance of the <see cref="AddressParseResult"/> class.
         /// </summary>
         /// <param name="fields">The fields that were parsed.</param>
-        internal AddressParseResult(Dictionary<string, string> fields)
+        public AddressParseResult(Dictionary<string, string> fields)
         {
-            if (fields == null)
-            {
-                throw new ArgumentNullException("fields");
-            }
-
-            var type = this.GetType();
-            foreach (var pair in fields)
-            {
-                var bindingFlags = 
-                    BindingFlags.Instance | 
-                    BindingFlags.Public | 
-                    BindingFlags.IgnoreCase;
-                var propertyInfo = type.GetProperty(pair.Key, bindingFlags);
-                if (propertyInfo != null)
-                {
-                    var methodInfo = propertyInfo.GetSetMethod(true);
-                    if (methodInfo != null)
-                    {
-                        methodInfo.Invoke(this, new[] { pair.Value });
-                    }
-                }
-            }
+            this.fields = fields ?? new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -51,8 +30,10 @@
         /// </summary>
         public string City
         {
-            get;
-            private set;
+            get
+            {
+                return this.GetField(Components.City);
+            }
         }
 
         /// <summary>
@@ -60,17 +41,10 @@
         /// </summary>
         public string Number
         {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the predirectional, such as "N" in "500 N Main St".
-        /// </summary>
-        public string Predirectional
-        {
-            get;
-            private set;
+            get
+            {
+                return this.GetField(Components.Number);
+            }
         }
 
         /// <summary>
@@ -78,8 +52,43 @@
         /// </summary>
         public string Postdirectional
         {
-            get;
-            private set;
+            get
+            {
+                return this.GetField(Components.Postdirectional);
+            }
+        }
+
+        /// <summary>
+        /// Gets the predirectional, such as "N" in "500 N Main St".
+        /// </summary>
+        public string Predirectional
+        {
+            get
+            {
+                return this.GetField(Components.Predirectional);
+            }
+        }
+
+        /// <summary>
+        /// Gets the secondary unit, such as "3" in "500 N MAIN ST APT 3".
+        /// </summary>
+        public string SecondaryNumber
+        {
+            get
+            {
+                return this.GetField(Components.SecondaryNumber);
+            }
+        }
+
+        /// <summary>
+        /// Gets the secondary unit, such as "APT" in "500 N MAIN ST APT 3".
+        /// </summary>
+        public string SecondaryUnit
+        {
+            get
+            {
+                return this.GetField(Components.SecondaryUnit);
+            }
         }
 
         /// <summary>
@@ -87,8 +96,10 @@
         /// </summary>
         public string State
         {
-            get;
-            private set;
+            get
+            {
+                return this.GetField(Components.State);
+            }
         }
 
         /// <summary>
@@ -96,8 +107,10 @@
         /// </summary>
         public string Street
         {
-            get;
-            private set;
+            get
+            {
+                return this.GetField(Components.Street);
+            }
         }
 
         /// <summary>
@@ -110,31 +123,18 @@
         {
             get
             {
-                if (this.streetLine == null)
+                if (this.streetLine != null)
                 {
-                    var streetLine = string.Join(
-                        " ",
-                        new[] {
-                            this.Number,
-                            this.Predirectional,
-                            this.Street,
-                            this.Suffix,
-                            this.Postdirectional,
-                            this.SecondaryUnit,
-                            this.SecondaryNumber
-                    });
-                    streetLine = Regex
-                        .Replace(streetLine, @"\ +", " ")
-                        .Trim();
-                    return streetLine;
+                    return this.streetLine;
                 }
 
-                return this.streetLine;
-            }
+                this.streetLine = this.GetField(Components.StreetLine);
+                if (!string.IsNullOrWhiteSpace(this.streetLine))
+                {
+                    return this.streetLine;
+                }
 
-            private set
-            {
-                this.streetLine = value;
+                return (this.streetLine = this.CreateStreetLine());
             }
         }
 
@@ -143,26 +143,10 @@
         /// </summary>
         public string Suffix
         {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the secondary unit, such as "APT" in "500 N MAIN ST APT 3".
-        /// </summary>
-        public string SecondaryUnit
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the secondary unit, such as "3" in "500 N MAIN ST APT 3".
-        /// </summary>
-        public string SecondaryNumber
-        {
-            get;
-            private set;
+            get
+            {
+                return this.GetField(Components.Suffix);
+            }
         }
 
         /// <summary>
@@ -170,8 +154,10 @@
         /// </summary>
         public string Zip
         {
-            get;
-            private set;
+            get
+            {
+                return this.GetField(Components.Zip);
+            }
         }
 
         /// <summary>
@@ -189,6 +175,23 @@
                 this.City,
                 this.State,
                 this.Zip);
+        }
+
+        private string CreateStreetLine()
+        {
+            var line = string.Join(
+                " ",
+                new[]
+                    {
+                        this.Number, this.Predirectional, this.Street, this.Suffix, this.Postdirectional, this.SecondaryUnit,
+                        this.SecondaryNumber
+                    });
+            return Regex.Replace(line, @"\ +", " ").Trim();
+        }
+
+        private string GetField(string key)
+        {
+            return !this.fields.ContainsKey(key) ? string.Empty : this.fields[key];
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace AddressParser.Tests
+﻿namespace USAddress.Tests
 {
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -253,7 +253,7 @@
         [Fact]
         public void VerifyZipPattern()
         {
-            Approvals.Verify(AddressParser.Default.ZipPattern);
+            Approvals.Verify(AddressParser.ZipPattern);
         }
     }
 }

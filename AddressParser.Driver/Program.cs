@@ -1,35 +1,37 @@
-﻿namespace AddressParser.Driver
+﻿namespace USAddress.Driver
 {
     using System;
     using System.Linq;
 
+    using USAddress.Driver.Properties;
+
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
-            var parser = new AddressParser();
-            var loop = false;
+            var parser = AddressParser.Default;
+            bool loop;
 
-            Console.WriteLine("Address Parser Driver");
+            Console.WriteLine(Resources.ProgramTitle);
             Console.WriteLine(new string('-', 40));
             Console.WriteLine();
-            Console.WriteLine("Example Input:");
-            Console.WriteLine("125 Main St, Richmond VA 23221");
+            Console.WriteLine(Resources.ExampleLabel);
+            Console.WriteLine(Resources.ExampleAddress);
             Console.WriteLine();
 
             do
             {
-                Console.WriteLine("Type an address and press <ENTER>:");
+                Console.WriteLine(Resources.AddressPrompt);
                 var input = Console.ReadLine();
 
                 var result = parser.ParseAddress(input);
                 if (result == null)
                 {
-                    Console.WriteLine("ERROR. Input could not be parsed.");
+                    Console.WriteLine(Resources.ErrorNotParsable);
                 }
                 else
                 {
-                    Console.WriteLine("RESULT: {0}", result);
+                    Console.WriteLine(Resources.ResultFormat, result);
 
                     var properties = result
                         .GetType()
@@ -38,16 +40,17 @@
                     foreach (var property in properties)
                     {
                         Console.WriteLine(
-                            "{0,30} : {1}",
+                            Resources.ResultItemFormat,
                             property.Name,
                             property.GetValue(result, null));
                     }
                 }
 
                 Console.WriteLine();
-                Console.Write("Try again? [Y/N] ");
+                Console.Write(Resources.TryAgainPrompt);
 
-                loop = Console.ReadLine().ToUpperInvariant() == "Y";
+                var readLine = Console.ReadLine() ?? string.Empty;
+                loop = readLine.ToUpperInvariant() == "Y";
             }
             while (loop);
         }
