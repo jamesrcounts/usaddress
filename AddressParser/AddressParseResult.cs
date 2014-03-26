@@ -1,6 +1,8 @@
 ﻿namespace USAddress
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Text.RegularExpressions;
 
@@ -192,6 +194,18 @@
         private string GetField(string key)
         {
             return !this.fields.ContainsKey(key) ? string.Empty : this.fields[key];
+        }
+
+        /// <summary>
+        /// Contracts that are true throughout the life of the class instance.
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by the CodeContract analyzer")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "CodeContract analyzer requires this to be an instance member.")]
+        [ExcludeFromCodeCoverage]
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(this.fields != null);
         }
     }
 }

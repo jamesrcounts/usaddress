@@ -1,6 +1,8 @@
 ﻿namespace USAddress
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -711,6 +713,7 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<Dictionary<string, string>>() != null);
                 return this.directional;
             }
         }
@@ -755,6 +758,7 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<Dictionary<string, string>>() != null);
                 return this.rangedSecondaryUnits;
             }
         }
@@ -804,6 +808,7 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<Dictionary<string, string>>() != null);
                 return this.states;
             }
         }
@@ -844,6 +849,7 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<Dictionary<string, string>>() != null);
                 return this.suffixes;
             }
         }
@@ -915,6 +921,7 @@
         /// matched successfully.</returns>
         private static string GetNormalizedValueByRegexLookup(Dictionary<string, string> map, string input)
         {
+            Contract.Requires(map != null);
             var output = input;
 
             foreach (var pair in map)
@@ -940,8 +947,9 @@
         /// <param name="input">The value to search for in the list of strings.</param>
         /// <returns>The correct USPS abbreviation, or the original value if no string
         /// matched successfully.</returns>
-        private static string GetNormalizedValueByStaticLookup(Dictionary<string, string> map, string input)
+        private static string GetNormalizedValueByStaticLookup(IDictionary<string, string> map, string input)
         {
+            Contract.Requires(map != null);
             string output;
 
             if (!map.TryGetValue(input, out output))
@@ -970,6 +978,7 @@
         /// are pulled from the input address.</returns>
         private Dictionary<string, string> GetApplicableFields(Match match)
         {
+            Contract.Requires(match != null);
             var applicable = new Dictionary<string, string>();
 
             foreach (var field in this.AddressRegex.GetGroupNames())
@@ -979,9 +988,10 @@
                     continue;
                 }
 
-                if (match.Groups[field].Success)
+                var mg = match.Groups[field];
+                if (mg != null && mg.Success)
                 {
-                    applicable[field] = match.Groups[field].Value;
+                    applicable[field] = mg.Value;
                 }
             }
 
@@ -998,6 +1008,11 @@
         /// <returns>The normalized value.</returns>
         private string GetNormalizedValueForField(string field, string input)
         {
+            if (input == null)
+            {
+                return null;
+            }
+
             var output = input;
 
             switch (field)
@@ -1095,14 +1110,19 @@
         /// </summary>
         /// <param name="extracted">The dictionary of extracted fields.</param>
         /// <returns>A dictionary of the extracted fields with normalized values.</returns>
-        private Dictionary<string, string> Normalize(Dictionary<string, string> extracted)
+        private Dictionary<string, string> Normalize(IDictionary<string, string> extracted)
         {
+            Contract.Requires(extracted != null);
             var normalized = new Dictionary<string, string>();
 
             foreach (var pair in extracted)
             {
                 var key = pair.Key;
                 var value = pair.Value;
+                if (value == null)
+                {
+                    continue;
+                }
 
                 // Strip off some punctuation
                 value = Regex.Replace(value, @"^\s+|\s+$|[^\/\w\s\-\#\&]", string.Empty);
@@ -1121,6 +1141,23 @@
             }
 
             return normalized;
+        }
+
+        /// <summary>
+        /// Contracts that are true throughout the life of the class instance.
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by the CodeContract analyzer")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "CodeContract analyzer requires this to be an instance member.")]
+        [ExcludeFromCodeCoverage]
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(this.fields != null);
+            Contract.Invariant(this.states != null);
+            Contract.Invariant(this.rangelessSecondaryUnits != null);
+            Contract.Invariant(this.suffixes != null);
+            Contract.Invariant(this.directional != null);
+            Contract.Invariant(this.rangedSecondaryUnits != null);
         }
     }
 }
