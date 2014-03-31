@@ -1,4 +1,4 @@
-﻿[9999 ATLANTIC AVE BROOKLYN, N.Y. 99999] => 
+﻿[9999 ATLANTIC AVE BROOKLYN, N.Y. 99999,True] => 
 AddressParseResult
 {
 	City: BROOKLYN
@@ -11,6 +11,54 @@ AddressParseResult
 	Street: ATLANTIC
 	StreetLine: 9999 ATLANTIC AVE
 	Suffix: AVE
+	Zip: 99999
+}
+
+[9999 ATLANTIC AVE BROOKLYN, N.Y. 99999,False] => 
+AddressParseResult
+{
+	City: BROOKLYN
+	Number: 9999
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: N.Y.
+	Street: ATLANTIC
+	StreetLine: 9999 ATLANTIC AVE
+	Suffix: AVE
+	Zip: 99999
+}
+
+[P.O.Box 9999, Brea, CA 99999,True] => 
+AddressParseResult
+{
+	City: BREA
+	Number: 
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: CA
+	Street: 
+	StreetLine: POBOX 9999
+	Suffix: 
+	Zip: 99999
+}
+
+[P.O.Box 9999, Brea, CA 99999,False] => 
+AddressParseResult
+{
+	City: Brea
+	Number: 
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: CA
+	Street: 
+	StreetLine: P.O.Box 9999
+	Suffix: 
 	Zip: 99999
 }
 

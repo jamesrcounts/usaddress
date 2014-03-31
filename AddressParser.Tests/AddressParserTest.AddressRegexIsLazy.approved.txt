@@ -13,7 +13,7 @@
                     # Special case for PO boxes
                     (
                         \W*
-                        (?<STREETLINE>(P[\.\ ]?O[\.\ ]?\ )?BOX\ [0-9]+)\W+
+                        (?<STREETLINE>(P[\.\s]?O[\.\s]?\s?)?BOX\s[0-9]+)\W+
                         
                     (?:
                     (?:

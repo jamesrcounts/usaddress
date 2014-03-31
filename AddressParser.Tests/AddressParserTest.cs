@@ -155,11 +155,14 @@
         [Fact]
         public void ParseExampleAddresses()
         {
-            string[] examples = { "9999 ATLANTIC AVE BROOKLYN, N.Y. 99999" };
+            string[] examples = { "9999 ATLANTIC AVE BROOKLYN, N.Y. 99999", "P.O.Box 9999, Brea, CA 99999" };
+            bool[] normalize = { true, false };
+
             CombinationApprovals.VerifyAllCombinations(
                 Parser.ParseAddress,
                 x => Environment.NewLine + ((AddressParseResult)x).WritePropertiesToString(),
-                examples);
+                examples,
+                normalize);
         }
 
         [Fact]
@@ -208,6 +211,12 @@
         public void VerifyPlacePattern()
         {
             Approvals.Verify(AddressParser.Default.PlacePattern);
+        }
+
+        [Fact]
+        public void VerifyPostalBoxPattern()
+        {
+            Approvals.Verify(AddressParser.Default.PostalBoxPattern);
         }
 
         [Fact]

@@ -708,7 +708,7 @@
         }
 
         /// <summary>
-        /// A combined dictionary of the ranged and not ranged secondary units.
+        /// Gets a combined dictionary of the ranged and not ranged secondary units.
         /// </summary>
         public Dictionary<string, string> AllUnits
         {
@@ -718,6 +718,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets the city and state pattern.
+        /// </summary>
+        /// <value>
+        /// The city and state pattern.
+        /// </value>
         public string CityAndStatePattern
         {
             get
@@ -732,7 +738,7 @@
         }
 
         /// <summary>
-        /// Maps directional names (north, northeast, etc.) to abbreviations (N, NE, etc.).
+        /// Gets a map of directional names (north, northeast, etc.) to abbreviations (N, NE, etc.).
         /// </summary>
         public Dictionary<string, string> DirectionalNames
         {
@@ -765,6 +771,22 @@
                     (?:{0}\W*)?
                     (?:(?<{2}>{1}))?
                 ", this.CityAndStatePattern, ZipPattern, Components.Zip);
+            }
+        }
+
+        public string PostalBoxPattern
+        {
+            get
+            {
+                return string.Format(CultureInfo.InvariantCulture, @"# Special case for PO boxes
+                    (
+                        \W*
+                        (?<{1}>(P[\.\s]?O[\.\s]?\s?)?BOX\s[0-9]+)\W+
+                        {0}
+                        \W*
+                    )",
+                    this.PlacePattern,
+                    Components.StreetLine);
             }
         }
 
@@ -1090,43 +1112,50 @@
                     Components.Number,
                     Components.SecondaryNumber);
 
-            var addressPattern = string.Format(CultureInfo.InvariantCulture,
-@"
-                    ^
-                    # Special case for APO/FPO/DPO addresses
+            var armedForcesPattern = string.Format(CultureInfo.InvariantCulture,
+@"# Special case for APO/FPO/DPO addresses
                     (
                         [^\w\#]*
-                        (?<{5}>.+?)
-                        (?<{6}>[AFD]PO)\W+
-                        (?<{7}>A[AEP])\W+
-                        (?<{8}>{4})
+                        (?<{1}>.+?)
+                        (?<{2}>[AFD]PO)\W+
+                        (?<{3}>A[AEP])\W+
+                        (?<{4}>{0})
                         \W*
-                    )
-                    |
-                    # Special case for PO boxes
-                    (
-                        \W*
-                        (?<" + @"{5}" + @">(P[\.\ ]?O[\.\ ]?\ )?BOX\ [0-9]+)\W+
-                        {3}
-                        \W*
-                    )
-                    |
-                    (
+                    )",
+                 ZipPattern,
+                 Components.StreetLine,
+                 Components.City,
+                 Components.State,
+                 Components.Zip);
+
+            var generalPattern = string.Format(CultureInfo.InvariantCulture,
+@"(
                         [^\w\#]*    # skip non-word chars except # (e.g. unit)
                         (  {0} )\W*
                            {1}\W+
                         (?:{2}\W+)?
                            {3}
                         \W*         # require on non-word chars at end
-                    )
-                    $           # right up to end of string
-                ",
+                    )",
                  numberPattern,
                  this.StreetPattern,
                  this.AllSecondaryUnitPattern,
-                 this.PlacePattern,
-                 ZipPattern,
-                 Components.StreetLine, Components.City, Components.State, Components.Zip);
+                 this.PlacePattern);
+
+            var addressPattern = string.Format(CultureInfo.InvariantCulture,
+@"
+                    ^
+                    {0}
+                    |
+                    {1}
+                    |
+                    {2}
+                    $           # right up to end of string
+                ",
+                 armedForcesPattern,
+                 this.PostalBoxPattern,
+                 generalPattern);
+
             return new Regex(addressPattern, MatchOptions);
         }
 
