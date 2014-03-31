@@ -1,9 +1,13 @@
 ﻿namespace USAddress.Tests
 {
+    using System;
     using System.Linq;
     using System.Text.RegularExpressions;
 
     using ApprovalTests;
+    using ApprovalTests.Combinations;
+
+    using ApprovalUtilities.Utilities;
 
     using Xunit;
 
@@ -146,6 +150,16 @@
             var streets = new[] { "9999 RIVERSIDE DR WEST #8B", "9999 RIVERSIDE DR WEST SIDE LEFT", };
             var results = streets.Select(s => new { Text = s, Match = Regex.Match(s, AddressParser.Default.RangelessSecondaryUnitPattern, AddressParser.MatchOptions) });
             Approvals.VerifyAll(results, "Match");
+        }
+
+        [Fact]
+        public void ParseExampleAddresses()
+        {
+            string[] examples = { "9999 ATLANTIC AVE BROOKLYN, N.Y. 99999" };
+            CombinationApprovals.VerifyAllCombinations(
+                Parser.ParseAddress,
+                x => Environment.NewLine + ((AddressParseResult)x).WritePropertiesToString(),
+                examples);
         }
 
         [Fact]

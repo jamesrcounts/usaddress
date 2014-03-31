@@ -1,0 +1,16 @@
+﻿[9999 ATLANTIC AVE BROOKLYN, N.Y. 99999] => 
+AddressParseResult
+{
+	City: BROOKLYN
+	Number: 9999
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: NY
+	Street: ATLANTIC
+	StreetLine: 9999 ATLANTIC AVE
+	Suffix: AVE
+	Zip: 99999
+}
+

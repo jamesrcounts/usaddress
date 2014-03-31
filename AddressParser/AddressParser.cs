@@ -234,6 +234,7 @@
                                                                      { "NEW JERSEY", "NJ" },
                                                                      { "NEW MEXICO", "NM" },
                                                                      { "NEW YORK", "NY" },
+                                                                     { "N.Y.", "NY" },
                                                                      { "NORTH CAROLINA", "NC" },
                                                                      { "NORTH DAKOTA", "ND" },
                                                                      {
@@ -671,7 +672,7 @@
         }
 
         /// <summary>
-        /// The gigantic regular expression that actually extracts the bits and pieces
+        /// Gets the gigantic regular expression that actually extracts the bits and pieces
         /// from a given address.
         /// </summary>
         public Regex AddressRegex
@@ -809,18 +810,20 @@
             }
         }
 
+        /// <summary>
+        /// Gets the pattern to match states and provinces.
+        /// </summary>
+        /// <value>
+        /// The state pattern.
+        /// </value>
         public string StatePattern
         {
             get
             {
-                return @"\b(?:"
-                       + string.Join(
-                           "|",
-                           new[]
-                               {
-                                   string.Join("|", this.StatesAndProvinces.Keys.Select(Regex.Escape)),
-                                   string.Join("|", this.StatesAndProvinces.Values)
-                               }) + @")\b";
+                return string.Format(
+                    CultureInfo.InvariantCulture,
+                    @"\b(?:{0})\b?",
+                    string.Join("|", this.StatesAndProvinces.Keys.Select(Regex.Escape).Concat(this.StatesAndProvinces.Values).OrderBy(k => k).Distinct()));
             }
         }
 
