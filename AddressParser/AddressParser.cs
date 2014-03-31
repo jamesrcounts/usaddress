@@ -31,10 +31,16 @@
     /// </summary>
     public class AddressParser
     {
+        /// <summary>
+        /// The match options to use with the address regular expression.
+        /// </summary>
         public const RegexOptions MatchOptions =
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace
             | RegexOptions.IgnoreCase;
 
+        /// <summary>
+        /// The default parser instance
+        /// </summary>
         private static readonly AddressParser Instance = new AddressParser();
 
         /// <summary>
@@ -636,6 +642,12 @@
         /// </summary>
         private Dictionary<string, string> allSecondaryUnits;
 
+        /// <summary>
+        /// Gets the default parser instance.
+        /// </summary>
+        /// <value>
+        /// The default parser.
+        /// </value>
         public static AddressParser Default
         {
             get
@@ -644,6 +656,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets the zip pattern.
+        /// </summary>
+        /// <value>
+        /// The zip pattern.
+        /// </value>
         public static string ZipPattern
         {
             get
@@ -664,6 +682,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets the pattern to match all known secondary units.
+        /// </summary>
+        /// <value>
+        /// The all secondary unit pattern.
+        /// </value>
         public string AllSecondaryUnitPattern
         {
             get
