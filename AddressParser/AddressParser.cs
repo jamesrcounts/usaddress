@@ -749,20 +749,32 @@
             }
         }
 
+        /// <summary>
+        /// Gets the pattern to match direction indicators (north, south, east, west, etc.)
+        /// </summary>
+        /// <value>
+        /// The directional pattern.
+        /// </value>
         public string DirectionalPattern
         {
             get
             {
-                return string.Join(
-                    "|",
-                    new[]
-                        {
-                            string.Join("|", this.DirectionalNames.Keys), string.Join("|", DirectionalNames.Values),
-                            string.Join("|", DirectionalNames.Values.Select(x => Regex.Replace(x, @"(\w)", @"$1\.")))
-                        });
+                var arguments = this.DirectionalNames.Values
+                    .Select(x => Regex.Replace(x, @"(\w)", @"$1\."))
+                    .Concat(this.DirectionalNames.Keys)
+                    .Concat(this.DirectionalNames.Values)
+                    .OrderByDescending(x => x.Length)
+                    .Distinct();
+                return string.Join("|", arguments);
             }
         }
 
+        /// <summary>
+        /// Gets the pattern to match city, state and zip.
+        /// </summary>
+        /// <value>
+        /// The place pattern.
+        /// </value>
         public string PlacePattern
         {
             get
@@ -770,10 +782,19 @@
                 return string.Format(CultureInfo.InvariantCulture, @"
                     (?:{0}\W*)?
                     (?:(?<{2}>{1}))?
-                ", this.CityAndStatePattern, ZipPattern, Components.Zip);
+                ",
+                 this.CityAndStatePattern,
+                 ZipPattern,
+                 Components.Zip);
             }
         }
 
+        /// <summary>
+        /// Gets the post office box pattern.
+        /// </summary>
+        /// <value>
+        /// The postal box pattern.
+        /// </value>
         public string PostalBoxPattern
         {
             get
@@ -790,16 +811,26 @@
             }
         }
 
+        /// <summary>
+        /// Gets the ranged secondary unit pattern.
+        /// </summary>
+        /// <value>
+        /// The ranged secondary unit pattern.
+        /// </value>
         public string RangedSecondaryUnitPattern
         {
             get
             {
-                return string.Format(CultureInfo.InvariantCulture, @"(?<{1}>{0})(?![a-z])", string.Join("|", this.RangedUnits.Keys), Components.SecondaryUnit);
+                return string.Format(
+                    CultureInfo.InvariantCulture,
+                    @"(?<{1}>{0})(?![a-z])",
+                    string.Join("|", this.RangedUnits.Keys.OrderByDescending(x => x.Length)),
+                    Components.SecondaryUnit);
             }
         }
 
         /// <summary>
-        /// Secondary units that require a number after them.
+        /// Gets a map from unit names that require a number after them to their standard forms.
         /// </summary>
         public Dictionary<string, string> RangedUnits
         {
@@ -810,6 +841,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets the pattern to match unit names that do not require a number after them.
+        /// </summary>
+        /// <value>
+        /// The unit name pattern for units that do not require a number.
+        /// </value>
         public string RangelessSecondaryUnitPattern
         {
             get
@@ -817,12 +854,13 @@
                 return string.Format(
                     CultureInfo.InvariantCulture,
                     @"\b(?<{1}>{0})\b",
-                    string.Join("|", this.rangelessSecondaryUnits.Keys), Components.SecondaryUnit);
+                    string.Join("|", this.rangelessSecondaryUnits.Keys.OrderByDescending(x => x.Length)),
+                    Components.SecondaryUnit);
             }
         }
 
         /// <summary>
-        /// Secondary units that do not require a number after them.
+        /// Gets a map from unit names that do not require a number after them to their standard forms.
         /// </summary>
         public Dictionary<string, string> RangelessUnits
         {
@@ -845,12 +883,12 @@
                 return string.Format(
                     CultureInfo.InvariantCulture,
                     @"\b(?:{0})\b?",
-                    string.Join("|", this.StatesAndProvinces.Keys.Select(Regex.Escape).Concat(this.StatesAndProvinces.Values).OrderBy(k => k).Distinct()));
+                    string.Join("|", this.StatesAndProvinces.Keys.Select(Regex.Escape).Concat(this.StatesAndProvinces.Values).OrderByDescending(k => k.Length).Distinct()));
             }
         }
 
         /// <summary>
-        /// Maps lowercase US state and territory names to their canonical two-letter
+        /// Gets a map from lowercase US state and territory names to their canonical two-letter
         /// postal abbreviations.
         /// </summary>
         public Dictionary<string, string> StatesAndProvinces
@@ -862,6 +900,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets the pattern to match the street number, name, and suffix.
+        /// </summary>
+        /// <value>
+        /// The street pattern.
+        /// </value>
         public string StreetPattern
         {
             get
@@ -891,7 +935,7 @@
         }
 
         /// <summary>
-        /// Maps lowercase USPS standard street suffixes to their canonical postal
+        /// Gets a map from the lowercase USPS standard street suffixes to their canonical postal
         /// abbreviations as found in TIGER/Line.
         /// </summary>
         public Dictionary<string, string> StreetSuffixes
@@ -903,11 +947,17 @@
             }
         }
 
+        /// <summary>
+        /// Gets the pattern to match standard street suffixes
+        /// </summary>
+        /// <value>
+        /// The suffix pattern.
+        /// </value>
         public string SuffixPattern
         {
             get
             {
-                return string.Join("|", StreetSuffixes.Values.Concat(StreetSuffixes.Keys).OrderBy(k => k).Distinct());
+                return string.Join("|", StreetSuffixes.Values.Concat(StreetSuffixes.Keys).OrderByDescending(k => k.Length).Distinct());
             }
         }
 
@@ -1009,11 +1059,14 @@
             return output;
         }
 
+        /// <summary>
+        /// Build a combined dictionary of both the ranged and rangeless secondary units.
+        /// </summary>
+        /// <returns>A map of ranged and rangeless secondary unit names to their standard forms.</returns>
+        /// <remarks>This is used by the Normalize() method to convert the unit into the USPS
+        /// standardized form.</remarks>
         private Dictionary<string, string> CombineSecondaryUnits()
         {
-            // Build a combined dictionary of both the ranged and rangeless secondary units.
-            // This is used by the Normalize() method to convert the unit into the USPS
-            // standardized form.
             return new[] { RangedUnits, this.rangelessSecondaryUnits }.SelectMany(x => x)
                 .ToDictionary(y => y.Key, y => y.Value);
         }

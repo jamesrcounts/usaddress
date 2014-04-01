@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>AddressParser</id>
-    <version>0.0.16</version>
+    <version>0.0.17</version>
     <title>AddressParser</title>
     <authors>Jim Counts</authors>
     <owners>Jim Counts</owners>
