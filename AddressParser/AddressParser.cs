@@ -866,6 +866,7 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<Dictionary<string, string>>() != null);
                 return this.rangelessSecondaryUnits;
             }
         }
