@@ -1,4 +1,12 @@
-﻿using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="AssemblyInfo.cs" company="Jim Counts">
+//     Copyright (c) Jim Counts 2013.
+// </copyright>
+// <summary>
+//   Assembly-wide configuration
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 

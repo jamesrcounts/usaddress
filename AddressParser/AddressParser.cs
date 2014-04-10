@@ -1,4 +1,13 @@
-﻿namespace USAddress
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="AddressParser.cs" company="Jim Counts">
+//     Copyright (c) Jim Counts 2013.
+// </copyright>
+// <summary>
+//   Defines the AddressParser type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace USAddress
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -679,7 +688,7 @@
         {
             get
             {
-                return addressRegex ?? (addressRegex = InitializeRegex());
+                return this.addressRegex ?? (this.addressRegex = this.InitializeRegex());
             }
         }
 
@@ -693,7 +702,7 @@
         {
             get
             {
-                return string.Format(CultureInfo.InvariantCulture, @"
+                return @"
                     (
                         (:?
                             (?: (?:{0} \W*)
@@ -703,7 +712,11 @@
                         )
                         |{1}
                     ),?
-                ", RangedSecondaryUnitPattern, RangelessSecondaryUnitPattern, Components.SecondaryUnit, Components.SecondaryNumber);
+                ".FormatInvariant(
+                 this.RangedSecondaryUnitPattern,
+                 this.RangelessSecondaryUnitPattern,
+                 Components.SecondaryUnit,
+                 Components.SecondaryNumber);
             }
         }
 
@@ -714,7 +727,7 @@
         {
             get
             {
-                return allSecondaryUnits ?? (allSecondaryUnits = this.CombineSecondaryUnits());
+                return this.allSecondaryUnits ?? (this.allSecondaryUnits = this.CombineSecondaryUnits());
             }
         }
 
@@ -728,12 +741,15 @@
         {
             get
             {
-                return string.Format(CultureInfo.InvariantCulture, @"
+                return @"
                     (?:
                         (?<{1}>[^\d,]+?)\W+
                         (?<{2}>{0})
                     )
-                ", this.StatePattern, Components.City, Components.State);
+                ".FormatInvariant(
+                 this.StatePattern,
+                 Components.City,
+                 Components.State);
             }
         }
 
@@ -779,10 +795,10 @@
         {
             get
             {
-                return string.Format(CultureInfo.InvariantCulture, @"
+                return @"
                     (?:{0}\W*)?
                     (?:(?<{2}>{1}))?
-                ",
+                ".FormatInvariant(
                  this.CityAndStatePattern,
                  ZipPattern,
                  Components.Zip);
@@ -799,15 +815,13 @@
         {
             get
             {
-                return string.Format(CultureInfo.InvariantCulture, @"# Special case for PO boxes
+                return @"# Special case for PO boxes
                     (
                         \W*
                         (?<{1}>(P[\.\s]?O[\.\s]?\s?)?BOX\s[0-9]+)\W+
                         {0}
                         \W*
-                    )",
-                    this.PlacePattern,
-                    Components.StreetLine);
+                    )".FormatInvariant(this.PlacePattern, Components.StreetLine);
             }
         }
 
@@ -911,7 +925,7 @@
         {
             get
             {
-                return string.Format(CultureInfo.InvariantCulture, @"
+                return @"
                         (?:
                           # special case for addresses like 100 South Street
                           (?:(?<{2}>{0})\W+
@@ -931,7 +945,7 @@
                             (?:[^\w,]+(?<{5}>{0})\b)?
                           )
                         )
-                    ", DirectionalPattern, this.SuffixPattern, Components.Street, Components.Suffix, Components.Predirectional, Components.Postdirectional);
+                    ".FormatInvariant(this.DirectionalPattern, this.SuffixPattern, Components.Street, Components.Suffix, Components.Predirectional, Components.Postdirectional);
             }
         }
 
@@ -958,7 +972,7 @@
         {
             get
             {
-                return string.Join("|", StreetSuffixes.Values.Concat(StreetSuffixes.Keys).OrderByDescending(k => k.Length).Distinct());
+                return string.Join("|", this.StreetSuffixes.Values.Concat(this.StreetSuffixes.Keys).OrderByDescending(k => k.Length).Distinct());
             }
         }
 
@@ -971,7 +985,7 @@
         /// </returns>
         public AddressParseResult ParseAddress(string input)
         {
-            return ParseAddress(input, true);
+            return this.ParseAddress(input, true);
         }
 
         /// <summary>
@@ -1003,7 +1017,7 @@
             var extracted = this.GetApplicableFields(match);
             if (normalize)
             {
-                extracted = Normalize(extracted);
+                extracted = this.Normalize(extracted);
             }
 
             return new AddressParseResult(extracted);
@@ -1061,14 +1075,14 @@
         }
 
         /// <summary>
-        /// Build a combined dictionary of both the ranged and rangeless secondary units.
+        /// Build a combined dictionary of both the ranged and singular secondary units.
         /// </summary>
-        /// <returns>A map of ranged and rangeless secondary unit names to their standard forms.</returns>
+        /// <returns>A map of ranged and singular secondary unit names to their standard forms.</returns>
         /// <remarks>This is used by the Normalize() method to convert the unit into the USPS
         /// standardized form.</remarks>
         private Dictionary<string, string> CombineSecondaryUnits()
         {
-            return new[] { RangedUnits, this.rangelessSecondaryUnits }.SelectMany(x => x)
+            return new[] { this.RangedUnits, this.rangelessSecondaryUnits }.SelectMany(x => x)
                 .ToDictionary(y => y.Key, y => y.Value);
         }
 
@@ -1122,7 +1136,7 @@
             {
                 case Components.Predirectional:
                 case Components.Postdirectional:
-                    output = GetNormalizedValueByStaticLookup(DirectionalNames, input);
+                    output = GetNormalizedValueByStaticLookup(this.DirectionalNames, input);
                     break;
 
                 case Components.Suffix:
@@ -1130,11 +1144,11 @@
                     break;
 
                 case Components.SecondaryUnit:
-                    output = GetNormalizedValueByRegexLookup(AllUnits, input);
+                    output = GetNormalizedValueByRegexLookup(this.AllUnits, input);
                     break;
 
                 case Components.State:
-                    output = GetNormalizedValueByStaticLookup(StatesAndProvinces, input);
+                    output = GetNormalizedValueByStaticLookup(this.StatesAndProvinces, input);
                     break;
 
                 case Components.Number:
@@ -1153,21 +1167,17 @@
         /// Builds the gigantic regular expression stored in the addressRegex static
         /// member that actually does the parsing.
         /// </summary>
+        /// <returns>The parser <see cref="Regex"/>.</returns>
         private Regex InitializeRegex()
         {
-            var numberPattern = string.Format(
-                CultureInfo.InvariantCulture,
-@"(
+            var numberPattern = @"(
                     ((?<{0}>\d+)(?<{1}>(-[0-9])|(\-?[A-Z]))(?=\b))    # Unit-attached
                     |(?<{0}>\d+[\-\ ]?\d+\/\d+)                                   # Fractional
                     |(?<{0}>\d+-?\d*)                                             # Normal Number
                     |(?<{0}>[NSWE]\ ?\d+\ ?[NSWE]\ ?\d+)                          # Wisconsin/Illinois
-                  )",
-                    Components.Number,
-                    Components.SecondaryNumber);
+                  )".FormatInvariant(Components.Number, Components.SecondaryNumber);
 
-            var armedForcesPattern = string.Format(CultureInfo.InvariantCulture,
-@"# Special case for APO/FPO/DPO addresses
+            var armedForcesPattern = @"# Special case for APO/FPO/DPO addresses
                     (
                         [^\w\#]*
                         (?<{1}>.+?)
@@ -1175,29 +1185,18 @@
                         (?<{3}>A[AEP])\W+
                         (?<{4}>{0})
                         \W*
-                    )",
-                 ZipPattern,
-                 Components.StreetLine,
-                 Components.City,
-                 Components.State,
-                 Components.Zip);
+                    )".FormatInvariant(ZipPattern, Components.StreetLine, Components.City, Components.State, Components.Zip);
 
-            var generalPattern = string.Format(CultureInfo.InvariantCulture,
-@"(
+            var generalPattern = @"(
                         [^\w\#]*    # skip non-word chars except # (e.g. unit)
                         (  {0} )\W*
                            {1}\W+
                         (?:{2}\W+)?
                            {3}
                         \W*         # require on non-word chars at end
-                    )",
-                 numberPattern,
-                 this.StreetPattern,
-                 this.AllSecondaryUnitPattern,
-                 this.PlacePattern);
+                    )".FormatInvariant(numberPattern, this.StreetPattern, this.AllSecondaryUnitPattern, this.PlacePattern);
 
-            var addressPattern = string.Format(CultureInfo.InvariantCulture,
-@"
+            var addressPattern = @"
                     ^
                     {0}
                     |
@@ -1205,10 +1204,7 @@
                     |
                     {2}
                     $           # right up to end of string
-                ",
-                 armedForcesPattern,
-                 this.PostalBoxPattern,
-                 generalPattern);
+                ".FormatInvariant(armedForcesPattern, this.PostalBoxPattern, generalPattern);
 
             return new Regex(addressPattern, MatchOptions);
         }
