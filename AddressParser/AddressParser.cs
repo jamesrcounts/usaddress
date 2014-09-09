@@ -43,9 +43,27 @@ namespace USAddress
         /// <summary>
         /// The match options to use with the address regular expression.
         /// </summary>
-        public const RegexOptions MatchOptions =
-            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace
-            | RegexOptions.IgnoreCase;
+        public RegexOptions MatchOptions
+        {
+            get
+            {
+                RegexOptions options = RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace
+                    | RegexOptions.IgnoreCase;
+
+                if (CompileRegex)
+                {
+                    options |= RegexOptions.Compiled;
+                }
+
+                return options;
+            }
+        }
+
+        /// <summary>
+        /// Whether to compile the regular expression objects. Enabled by
+        /// default.
+        /// </summary>
+        public bool CompileRegex { get; set; }
 
         /// <summary>
         /// The default parser instance
@@ -974,6 +992,14 @@ namespace USAddress
             {
                 return string.Join("|", this.StreetSuffixes.Values.Concat(this.StreetSuffixes.Keys).OrderByDescending(k => k.Length).Distinct());
             }
+        }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public AddressParser()
+        {
+            this.CompileRegex = true;
         }
 
         /// <summary>
