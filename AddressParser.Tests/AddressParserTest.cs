@@ -148,7 +148,7 @@
         public void MatchSecondaryUnitAsWord()
         {
             var streets = new[] { "9999 RIVERSIDE DR WEST #8B", "9999 RIVERSIDE DR WEST SIDE LEFT", };
-            var results = streets.Select(s => new { Text = s, Match = Regex.Match(s, AddressParser.Default.RangelessSecondaryUnitPattern, AddressParser.MatchOptions) });
+            var results = streets.Select(s => new { Text = s, Match = Regex.Match(s, AddressParser.Default.RangelessSecondaryUnitPattern, AddressParser.Default.MatchOptions) });
             Approvals.VerifyAll(results, "Match");
         }
 
@@ -204,7 +204,7 @@
         [Fact]
         public void VerifyMatchOptions()
         {
-            Approvals.Verify(AddressParser.MatchOptions);
+            Approvals.Verify(AddressParser.Default.MatchOptions);
         }
 
         [Fact]
