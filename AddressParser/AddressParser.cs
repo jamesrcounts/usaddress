@@ -41,31 +41,6 @@ namespace USAddress
     public class AddressParser
     {
         /// <summary>
-        /// The match options to use with the address regular expression.
-        /// </summary>
-        public RegexOptions MatchOptions
-        {
-            get
-            {
-                RegexOptions options = RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace
-                    | RegexOptions.IgnoreCase;
-
-                if (CompileRegex)
-                {
-                    options |= RegexOptions.Compiled;
-                }
-
-                return options;
-            }
-        }
-
-        /// <summary>
-        /// Whether to compile the regular expression objects. Enabled by
-        /// default.
-        /// </summary>
-        public bool CompileRegex { get; set; }
-
-        /// <summary>
         /// The default parser instance
         /// </summary>
         private static readonly AddressParser Instance = new AddressParser();
@@ -671,6 +646,14 @@ namespace USAddress
         private Dictionary<string, string> allSecondaryUnits;
 
         /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public AddressParser()
+        {
+            this.CompileRegex = true;
+        }
+
+        /// <summary>
         /// Gets the default parser instance.
         /// </summary>
         /// <value>
@@ -772,6 +755,12 @@ namespace USAddress
         }
 
         /// <summary>
+        /// Whether to compile the regular expression objects. Enabled by
+        /// default.
+        /// </summary>
+        public bool CompileRegex { get; set; }
+
+        /// <summary>
         /// Gets a map of directional names (north, northeast, etc.) to abbreviations (N, NE, etc.).
         /// </summary>
         public Dictionary<string, string> DirectionalNames
@@ -800,6 +789,25 @@ namespace USAddress
                     .OrderByDescending(x => x.Length)
                     .Distinct();
                 return string.Join("|", arguments);
+            }
+        }
+
+        /// <summary>
+        /// The match options to use with the address regular expression.
+        /// </summary>
+        public RegexOptions MatchOptions
+        {
+            get
+            {
+                var options = RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace
+                    | RegexOptions.IgnoreCase;
+
+                if (CompileRegex)
+                {
+                    options |= RegexOptions.Compiled;
+                }
+
+                return options;
             }
         }
 
@@ -992,14 +1000,6 @@ namespace USAddress
             {
                 return string.Join("|", this.StreetSuffixes.Values.Concat(this.StreetSuffixes.Keys).OrderByDescending(k => k.Length).Distinct());
             }
-        }
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public AddressParser()
-        {
-            this.CompileRegex = true;
         }
 
         /// <summary>
