@@ -16,6 +16,15 @@
         private static readonly AddressParser Parser = AddressParser.Default;
 
         [Fact]
+        public void StateRespectsWordBoundaries()
+        {
+            var reg = new Regex(Parser.StatePattern, Parser.MatchOptions);
+            var match = reg.Match("FT LAUDERDALE,FL,33312");
+            var state = match.Groups[0].Value;
+            Approvals.Verify(state);
+        }
+
+        [Fact]
         public void AddressRegexIsLazy()
         {
             var addressParser = new AddressParser();
