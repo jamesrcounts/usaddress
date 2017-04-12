@@ -8,14 +8,14 @@ Fork of https://usaddress.codeplex.com/
 
 Since codeplex is closing soon, here is the readme from codeplex:
 
-"
-Project Description
+# Project Description
 This is a partial port of the Perl Geo::StreetAddress::US CPAN module to C#. The goal is to take a US address as a single-line string and parse it out into its component pieces to accelerate data entry and import.
 
 The class AddressParser takes a semi-structured address input as a single String and returns it parsed into an AddressParseResult instance. It includes some unit tests and a console application so that you can play around with it:
 
-Capture.PNG
-Where this came from
+![Screenshot](./Icons/Capture.PNG)
+
+# Where this came from
 
 This code is a partial port of the Geo::StreetAddress:US Perl module from CPAN written by Schuyler D. Erle. In his case, he wrote it as part of the great geocoder.us service that provides free geocoding for US addresses (with some reasonable rate limiting and restrictions for commercial use).
 
@@ -41,21 +41,8 @@ Like the original Perl version, the AddressParser class solves the problem by bu
 It is certainly not magic. Without a list of valid delivery points, it's impossible for it to know the true intent in some cases, especially if you hand it addresses where users have typed crap in the street line. ("123 Main St Door Code # 438" would result in it thinking the street is named "MAIN DOOR CODE", for example, and without a list of valid streets, it's not going to know that "DOOR CODE" should be part of a leftovers field instead of the street name.)
 
 Make sure that you can accept these limitations in your intended use case. I have posted it because I feel that it's something that people could still use in a great many products, and that porting it to C# makes it a bit more accessible to many more people.
-Last edited Dec 24, 2011 at 1:26 PM by npiaseck, version 12
 
-
-Search Wiki & Documentation
-There is no recommended release for this project.
-
-activity
-
-downloads
-6
-Days: 7
-30
-All
-Details
-"
+> Last edited Dec 24, 2011 at 1:26 PM by npiaseck, version 12
 
 Available on NuGet
 ==================
