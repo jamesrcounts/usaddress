@@ -2,6 +2,8 @@
 usaddress
 =========
 
+[![Build status](https://ci.appveyor.com/api/projects/status/5hi0vamr3wek2iyv?svg=true)](https://ci.appveyor.com/project/jamesrcounts/usaddress)
+
 Fork of https://usaddress.codeplex.com/
 
 Available on NuGet
