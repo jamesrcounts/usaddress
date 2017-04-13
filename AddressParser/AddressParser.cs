@@ -744,7 +744,7 @@ namespace USAddress
             {
                 return @"
                     (?:
-                        (?<{1}>[^\d,]+?)\W+
+                        (?<{1}>[^\d,]+)\W+
                         (?<{2}>{0})
                     )
                 ".FormatInvariant(

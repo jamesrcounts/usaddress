@@ -16,6 +16,15 @@
         private static readonly AddressParser Parser = AddressParser.Default;
 
         [Fact]
+        public void StateDoesNotMatchCity()
+        {
+            var reg = new Regex(Parser.PlacePattern, Parser.MatchOptions);
+            var match = reg.Match("URB LA FABRICA,PR,00704");
+            var state = match.Groups[Components.State].Value;
+            Approvals.Verify(state);
+        }
+
+        [Fact]
         public void AddressRegexIsLazy()
         {
             var addressParser = new AddressParser();
