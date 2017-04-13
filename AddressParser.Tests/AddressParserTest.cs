@@ -16,11 +16,11 @@
         private static readonly AddressParser Parser = AddressParser.Default;
 
         [Fact]
-        public void StateRespectsWordBoundaries()
+        public void StateDoesNotMatchCity()
         {
-            var reg = new Regex(Parser.StatePattern, Parser.MatchOptions);
-            var match = reg.Match("FT LAUDERDALE,FL,33312");
-            var state = match.Groups[0].Value;
+            var reg = new Regex(Parser.PlacePattern, Parser.MatchOptions);
+            var match = reg.Match("URB LA FABRICA,PR,00704");
+            var state = match.Groups[Components.State].Value;
             Approvals.Verify(state);
         }
 

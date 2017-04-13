@@ -744,7 +744,7 @@ namespace USAddress
             {
                 return @"
                     (?:
-                        (?<{1}>[^\d,]+?)\W+
+                        (?<{1}>[^\d,]+)\W+
                         (?<{2}>{0})
                     )
                 ".FormatInvariant(
@@ -923,7 +923,7 @@ namespace USAddress
             {
                 return string.Format(
                     CultureInfo.InvariantCulture,
-                    @"\b(?:{0})\b",
+                    @"\b(?:{0})\b?",
                     string.Join("|", this.StatesAndProvinces.Keys.Select(Regex.Escape).Concat(this.StatesAndProvinces.Values).OrderByDescending(k => k.Length).Distinct()));
             }
         }
