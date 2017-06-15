@@ -1,7 +1,12 @@
+
 version: 1.0.{build}
 image: Visual Studio 2017
 clone_depth: 1
 build:
   verbosity: normal
+test:
+  assemblies:
+    only:
+    - '**/AddressParser.Tests.dll'
 artifacts:
 - path: '**/*.nupkg'
