@@ -1,16 +1,17 @@
-﻿namespace USAddress.Tests
+﻿using System.IO;
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+using ApprovalTests;
+using ApprovalTests.Combinations;
+
+using ApprovalUtilities.Utilities;
+
+using Xunit;
+
+namespace USAddress.Tests
 {
-    using System;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-
-    using ApprovalTests;
-    using ApprovalTests.Combinations;
-
-    using ApprovalUtilities.Utilities;
-
-    using Xunit;
-
     public class AddressParserTest
     {
         private static readonly AddressParser Parser = AddressParser.Default;
@@ -164,7 +165,9 @@
         [Fact]
         public void ParseExampleAddresses()
         {
-            string[] examples = { "9999 ATLANTIC AVE BROOKLYN, N.Y. 99999", "P.O.Box 9999, Brea, CA 99999" };
+            var text = File.ReadAllText(PathUtilities.GetAdjacentFile("samples.txt"));
+            var examples = text.Split(new[] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries)
+                .Where(s => !s.StartsWith("#", StringComparison.OrdinalIgnoreCase));
             bool[] normalize = { true, false };
 
             CombinationApprovals.VerifyAllCombinations(

@@ -1,13 +1,9 @@
-﻿namespace AddressParser.Tests
+﻿using System.Collections.Generic;
+using ApprovalTests;
+using Xunit;
+
+namespace USAddress.Tests
 {
-    using System.Collections.Generic;
-
-    using ApprovalTests;
-
-    using USAddress;
-
-    using Xunit;
-
     public class AddressParseResultTests
     {
         private static readonly Dictionary<string, string> Fields = new Dictionary<string, string>
@@ -56,13 +52,7 @@
                                                                             },
                                                                         };
 
-        private static AddressParseResult AddressParseResult
-        {
-            get
-            {
-                return new AddressParseResult(Fields);
-            }
-        }
+        private static AddressParseResult AddressParseResult => new AddressParseResult(Fields);
 
         [Fact]
         public void HandleMissingFields()

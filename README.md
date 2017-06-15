@@ -49,6 +49,7 @@ It is certainly not magic. Without a list of valid delivery points, it's impossi
 
 Available on NuGet
 ==================
+
 [Install-Package AddressParser](http://www.nuget.org/packages/AddressParser/)
 
 Icon
