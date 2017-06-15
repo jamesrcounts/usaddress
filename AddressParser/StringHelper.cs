@@ -6,12 +6,11 @@
 //   Defines the StringHelper type.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Globalization;
 
 namespace USAddress
 {
-    using System;
-    using System.Globalization;
-
     /// <summary>
     /// String extensions
     /// </summary>

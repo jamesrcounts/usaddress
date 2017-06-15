@@ -1,18 +1,17 @@
 ﻿using System.IO;
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+using ApprovalTests;
+using ApprovalTests.Combinations;
+
+using ApprovalUtilities.Utilities;
+
+using Xunit;
 
 namespace USAddress.Tests
 {
-    using System;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-
-    using ApprovalTests;
-    using ApprovalTests.Combinations;
-
-    using ApprovalUtilities.Utilities;
-
-    using Xunit;
-
     public class AddressParserTest
     {
         private static readonly AddressParser Parser = AddressParser.Default;
