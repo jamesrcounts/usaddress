@@ -48,7 +48,7 @@ namespace USAddress
         /// <summary>
         /// Maps directional names (north, northeast, etc.) to abbreviations (N, NE, etc.).
         /// </summary>
-        private readonly Dictionary<string, string> directional = new Dictionary<string, string>
+        private readonly Dictionary<string, string> _directional = new Dictionary<string, string>
                                                                       {
                                                                           { "NORTH", "N" },
                                                                           { "NORTHEAST", "NE" },
@@ -64,7 +64,7 @@ namespace USAddress
         /// In the <see cref="M:addressRegex"/> member, these are the names
         /// of the groups in the result that we care to inspect.
         /// </summary>
-        private readonly string[] fields =
+        private readonly string[] _fields =
             {
                 Components.Number, Components.Predirectional, Components.Street, Components.StreetLine, Components.Suffix,
                 Components.Postdirectional, Components.City, Components.State, Components.Zip, Components.SecondaryUnit,
@@ -74,7 +74,7 @@ namespace USAddress
         /// <summary>
         /// Secondary units that require a number after them.
         /// </summary>
-        private readonly Dictionary<string, string> rangedSecondaryUnits = new Dictionary<string, string>
+        private readonly Dictionary<string, string> _rangedSecondaryUnits = new Dictionary<string, string>
                                                                                {
                                                                                    {
                                                                                        @"SU?I?TE",
@@ -145,7 +145,7 @@ namespace USAddress
         /// <summary>
         /// Secondary units that do not require a number after them.
         /// </summary>
-        private readonly Dictionary<string, string> rangelessSecondaryUnits = new Dictionary<string, string>
+        private readonly Dictionary<string, string> _rangelessSecondaryUnits = new Dictionary<string, string>
                                                                                   {
                                                                                       {
                                                                                           "BA?SE?ME?N?T",
@@ -189,7 +189,7 @@ namespace USAddress
         /// Maps lowercase US state and territory names to their canonical two-letter
         /// postal abbreviations.
         /// </summary>
-        private readonly Dictionary<string, string> states = new Dictionary<string, string>
+        private readonly Dictionary<string, string> _states = new Dictionary<string, string>
                                                                  {
                                                                      { "ALABAMA", "AL" },
                                                                      { "ALASKA", "AK" },
@@ -268,7 +268,7 @@ namespace USAddress
         /// Maps lowercase USPS standard street suffixes to their canonical postal
         /// abbreviations as found in TIGER/Line.
         /// </summary>
-        private readonly Dictionary<string, string> suffixes = new Dictionary<string, string>
+        private readonly Dictionary<string, string> _suffixes = new Dictionary<string, string>
                                                                    {
                                                                        { "ALLEE", "ALY" },
                                                                        { "ALLEY", "ALY" },
@@ -638,15 +638,15 @@ namespace USAddress
         /// The gigantic regular expression that actually extracts the bits and pieces
         /// from a given address.
         /// </summary>
-        private Regex addressRegex;
+        private Regex _addressRegex;
 
         /// <summary>
         /// A combined dictionary of the ranged and not ranged secondary units.
         /// </summary>
-        private Dictionary<string, string> allSecondaryUnits;
+        private Dictionary<string, string> _allSecondaryUnits;
 
         /// <summary>
-        /// Default constructor.
+        /// Initializes a new instance of the <see cref="AddressParser"/> class.
         /// </summary>
         public AddressParser()
         {
@@ -689,7 +689,7 @@ namespace USAddress
         {
             get
             {
-                return this.addressRegex ?? (this.addressRegex = this.InitializeRegex());
+                return this._addressRegex ?? (this._addressRegex = this.InitializeRegex());
             }
         }
 
@@ -728,7 +728,7 @@ namespace USAddress
         {
             get
             {
-                return this.allSecondaryUnits ?? (this.allSecondaryUnits = this.CombineSecondaryUnits());
+                return this._allSecondaryUnits ?? (this._allSecondaryUnits = this.CombineSecondaryUnits());
             }
         }
 
@@ -755,8 +755,7 @@ namespace USAddress
         }
 
         /// <summary>
-        /// Whether to compile the regular expression objects. Enabled by
-        /// default.
+        /// Gets or sets a value indicating whether to compile the regular expression objects. Enabled by default.
         /// </summary>
         public bool CompileRegex { get; set; }
 
@@ -768,7 +767,7 @@ namespace USAddress
             get
             {
                 Contract.Ensures(Contract.Result<Dictionary<string, string>>() != null);
-                return this.directional;
+                return this._directional;
             }
         }
 
@@ -793,7 +792,7 @@ namespace USAddress
         }
 
         /// <summary>
-        /// The match options to use with the address regular expression.
+        /// Gets the match options to use with the address regular expression.
         /// </summary>
         public RegexOptions MatchOptions
         {
@@ -877,7 +876,7 @@ namespace USAddress
             get
             {
                 Contract.Ensures(Contract.Result<Dictionary<string, string>>() != null);
-                return this.rangedSecondaryUnits;
+                return this._rangedSecondaryUnits;
             }
         }
 
@@ -894,7 +893,7 @@ namespace USAddress
                 return string.Format(
                     CultureInfo.InvariantCulture,
                     @"\b(?<{1}>{0})\b",
-                    string.Join("|", this.rangelessSecondaryUnits.Keys.OrderByDescending(x => x.Length)),
+                    string.Join("|", this._rangelessSecondaryUnits.Keys.OrderByDescending(x => x.Length)),
                     Components.SecondaryUnit);
             }
         }
@@ -907,7 +906,7 @@ namespace USAddress
             get
             {
                 Contract.Ensures(Contract.Result<Dictionary<string, string>>() != null);
-                return this.rangelessSecondaryUnits;
+                return this._rangelessSecondaryUnits;
             }
         }
 
@@ -937,7 +936,7 @@ namespace USAddress
             get
             {
                 Contract.Ensures(Contract.Result<Dictionary<string, string>>() != null);
-                return this.states;
+                return this._states;
             }
         }
 
@@ -984,7 +983,7 @@ namespace USAddress
             get
             {
                 Contract.Ensures(Contract.Result<Dictionary<string, string>>() != null);
-                return this.suffixes;
+                return this._suffixes;
             }
         }
 
@@ -1108,7 +1107,7 @@ namespace USAddress
         /// standardized form.</remarks>
         private Dictionary<string, string> CombineSecondaryUnits()
         {
-            return new[] { this.RangedUnits, this.rangelessSecondaryUnits }.SelectMany(x => x)
+            return new[] { this.RangedUnits, this._rangelessSecondaryUnits }.SelectMany(x => x)
                 .ToDictionary(y => y.Key, y => y.Value);
         }
 
@@ -1126,7 +1125,7 @@ namespace USAddress
 
             foreach (var field in this.AddressRegex.GetGroupNames())
             {
-                if (!this.fields.Contains(field))
+                if (!this._fields.Contains(field))
                 {
                     continue;
                 }
@@ -1284,12 +1283,12 @@ namespace USAddress
         [ContractInvariantMethod]
         private void ObjectInvariant()
         {
-            Contract.Invariant(this.fields != null);
-            Contract.Invariant(this.states != null);
-            Contract.Invariant(this.rangelessSecondaryUnits != null);
-            Contract.Invariant(this.suffixes != null);
-            Contract.Invariant(this.directional != null);
-            Contract.Invariant(this.rangedSecondaryUnits != null);
+            Contract.Invariant(this._fields != null);
+            Contract.Invariant(this._states != null);
+            Contract.Invariant(this._rangelessSecondaryUnits != null);
+            Contract.Invariant(this._suffixes != null);
+            Contract.Invariant(this._directional != null);
+            Contract.Invariant(this._rangedSecondaryUnits != null);
         }
     }
 }

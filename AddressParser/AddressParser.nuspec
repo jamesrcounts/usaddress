@@ -16,7 +16,4 @@
       <reference file ="AddressParser.dll" />
     </references>
   </metadata>
-  <files>
-    <file src="bin\Debug\CodeContracts\AddressParser.Contracts.dll" target="lib\net40" />
-  </files>
 </package>
