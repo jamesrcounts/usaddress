@@ -9,4 +9,4 @@ test:
     only:
     - '**/AddressParser.Tests.dll'
 artifacts:
-- path: '**/*.nupkg'
+- path: '**/AddressParser.*.nupkg'
