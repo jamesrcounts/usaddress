@@ -1,3 +1,17 @@
 # Add test cases to this file, one per line - either \n or \r\n should work.
 9999 ATLANTIC AVE BROOKLYN, N.Y. 99999
 P.O.Box 9999, Brea, CA 99999
+3360 County Road F Tekamah NE 68061
+623 NE 5th AVE Fort Lauderdale FL 33304
+Route 1  Gouldsboro ME 04607
+3419 Avenue C Council Bluffs IA 51501
+65 Ginger Woods  Valley NE 68064
+Rte 175 Blue Hill Falls Rd  Blue Hill ME 04614
+1302 LUCERNE AVENUE  Lake Worth FL 33460
+RR 1 Box 3145  Sedgwick ME 04676
+3360 County Road F Tekamah NE 68061
+623 NE 5th AVE Fort Lauderdale FL 33304
+Route 1  Gouldsboro ME 04607
+3419 Avenue C Council Bluffs IA 51501
+65 Ginger Woods  Valley NE 68064
+1302 LUCERNE AVENUE  Lake Worth FL 33460

@@ -62,3 +62,451 @@ AddressParseResult
 	Zip: 99999
 }
 
+[3360 County Road F Tekamah NE 68061,True] => 
+AddressParseResult
+{
+	City: F TEKAMAH
+	Number: 3360
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: NE
+	Street: COUNTY
+	StreetLine: 3360 COUNTY RD
+	Suffix: RD
+	Zip: 68061
+}
+
+[3360 County Road F Tekamah NE 68061,False] => 
+AddressParseResult
+{
+	City: F Tekamah
+	Number: 3360
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: NE
+	Street: County
+	StreetLine: 3360 County Road
+	Suffix: Road
+	Zip: 68061
+}
+
+[623 NE 5th AVE Fort Lauderdale FL 33304,True] => 
+AddressParseResult
+{
+	City: LAUDERDALE
+	Number: 623
+	Postdirectional: 
+	Predirectional: NE
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: FL
+	Street: 5TH AVE
+	StreetLine: 623 NE 5TH AVE FT
+	Suffix: FT
+	Zip: 33304
+}
+
+[623 NE 5th AVE Fort Lauderdale FL 33304,False] => 
+AddressParseResult
+{
+	City: Lauderdale
+	Number: 623
+	Postdirectional: 
+	Predirectional: NE
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: FL
+	Street: 5th AVE
+	StreetLine: 623 NE 5th AVE Fort
+	Suffix: Fort
+	Zip: 33304
+}
+
+[Route 1  Gouldsboro ME 04607,True] => 
+AddressParseResult
+{
+	City: 
+	Number: 1
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: 
+	Street: GOULDSBORO ME
+	StreetLine: 1 GOULDSBORO ME
+	Suffix: 
+	Zip: 04607
+}
+
+[Route 1  Gouldsboro ME 04607,False] => 
+AddressParseResult
+{
+	City: 
+	Number: 1
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: 
+	Street: Gouldsboro ME
+	StreetLine: 1 Gouldsboro ME
+	Suffix: 
+	Zip: 04607
+}
+
+[3419 Avenue C Council Bluffs IA 51501,True] => 
+AddressParseResult
+{
+	City: C COUNCIL BLUFFS
+	Number: 3419
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: IA
+	Street: AVENUE
+	StreetLine: 3419 AVENUE
+	Suffix: 
+	Zip: 51501
+}
+
+[3419 Avenue C Council Bluffs IA 51501,False] => 
+AddressParseResult
+{
+	City: C Council Bluffs
+	Number: 3419
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: IA
+	Street: Avenue
+	StreetLine: 3419 Avenue
+	Suffix: 
+	Zip: 51501
+}
+
+[65 Ginger Woods  Valley NE 68064,True] => 
+AddressParseResult
+{
+	City: 
+	Number: 65
+	Postdirectional: NE
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: 
+	Street: GINGER WOODS
+	StreetLine: 65 GINGER WOODS VLY NE
+	Suffix: VLY
+	Zip: 68064
+}
+
+[65 Ginger Woods  Valley NE 68064,False] => 
+AddressParseResult
+{
+	City: 
+	Number: 65
+	Postdirectional: NE
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: 
+	Street: Ginger Woods 
+	StreetLine: 65 Ginger Woods Valley NE
+	Suffix: Valley
+	Zip: 68064
+}
+
+[Rte 175 Blue Hill Falls Rd  Blue Hill ME 04614,True] => 
+AddressParseResult
+{
+	City: BLUE HILL
+	Number: 175
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: ME
+	Street: BLUE HILL FALLS
+	StreetLine: 175 BLUE HILL FALLS RD
+	Suffix: RD
+	Zip: 04614
+}
+
+[Rte 175 Blue Hill Falls Rd  Blue Hill ME 04614,False] => 
+AddressParseResult
+{
+	City: Blue Hill
+	Number: 175
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: ME
+	Street: Blue Hill Falls
+	StreetLine: 175 Blue Hill Falls Rd
+	Suffix: Rd
+	Zip: 04614
+}
+
+[1302 LUCERNE AVENUE  Lake Worth FL 33460,True] => 
+AddressParseResult
+{
+	City: WORTH
+	Number: 1302
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: FL
+	Street: LUCERNE AVENUE
+	StreetLine: 1302 LUCERNE AVENUE LK
+	Suffix: LK
+	Zip: 33460
+}
+
+[1302 LUCERNE AVENUE  Lake Worth FL 33460,False] => 
+AddressParseResult
+{
+	City: Worth
+	Number: 1302
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: FL
+	Street: LUCERNE AVENUE 
+	StreetLine: 1302 LUCERNE AVENUE Lake
+	Suffix: Lake
+	Zip: 33460
+}
+
+[RR 1 Box 3145  Sedgwick ME 04676,True] => 
+AddressParseResult
+{
+	City: SEDGWICK
+	Number: 1
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: ME
+	Street: BOX 3145
+	StreetLine: 1 BOX 3145
+	Suffix: 
+	Zip: 04676
+}
+
+[RR 1 Box 3145  Sedgwick ME 04676,False] => 
+AddressParseResult
+{
+	City: Sedgwick
+	Number: 1
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: ME
+	Street: Box 3145
+	StreetLine: 1 Box 3145
+	Suffix: 
+	Zip: 04676
+}
+
+[3360 County Road F Tekamah NE 68061,True] => 
+AddressParseResult
+{
+	City: F TEKAMAH
+	Number: 3360
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: NE
+	Street: COUNTY
+	StreetLine: 3360 COUNTY RD
+	Suffix: RD
+	Zip: 68061
+}
+
+[3360 County Road F Tekamah NE 68061,False] => 
+AddressParseResult
+{
+	City: F Tekamah
+	Number: 3360
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: NE
+	Street: County
+	StreetLine: 3360 County Road
+	Suffix: Road
+	Zip: 68061
+}
+
+[623 NE 5th AVE Fort Lauderdale FL 33304,True] => 
+AddressParseResult
+{
+	City: LAUDERDALE
+	Number: 623
+	Postdirectional: 
+	Predirectional: NE
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: FL
+	Street: 5TH AVE
+	StreetLine: 623 NE 5TH AVE FT
+	Suffix: FT
+	Zip: 33304
+}
+
+[623 NE 5th AVE Fort Lauderdale FL 33304,False] => 
+AddressParseResult
+{
+	City: Lauderdale
+	Number: 623
+	Postdirectional: 
+	Predirectional: NE
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: FL
+	Street: 5th AVE
+	StreetLine: 623 NE 5th AVE Fort
+	Suffix: Fort
+	Zip: 33304
+}
+
+[Route 1  Gouldsboro ME 04607,True] => 
+AddressParseResult
+{
+	City: 
+	Number: 1
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: 
+	Street: GOULDSBORO ME
+	StreetLine: 1 GOULDSBORO ME
+	Suffix: 
+	Zip: 04607
+}
+
+[Route 1  Gouldsboro ME 04607,False] => 
+AddressParseResult
+{
+	City: 
+	Number: 1
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: 
+	Street: Gouldsboro ME
+	StreetLine: 1 Gouldsboro ME
+	Suffix: 
+	Zip: 04607
+}
+
+[3419 Avenue C Council Bluffs IA 51501,True] => 
+AddressParseResult
+{
+	City: C COUNCIL BLUFFS
+	Number: 3419
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: IA
+	Street: AVENUE
+	StreetLine: 3419 AVENUE
+	Suffix: 
+	Zip: 51501
+}
+
+[3419 Avenue C Council Bluffs IA 51501,False] => 
+AddressParseResult
+{
+	City: C Council Bluffs
+	Number: 3419
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: IA
+	Street: Avenue
+	StreetLine: 3419 Avenue
+	Suffix: 
+	Zip: 51501
+}
+
+[65 Ginger Woods  Valley NE 68064,True] => 
+AddressParseResult
+{
+	City: 
+	Number: 65
+	Postdirectional: NE
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: 
+	Street: GINGER WOODS
+	StreetLine: 65 GINGER WOODS VLY NE
+	Suffix: VLY
+	Zip: 68064
+}
+
+[65 Ginger Woods  Valley NE 68064,False] => 
+AddressParseResult
+{
+	City: 
+	Number: 65
+	Postdirectional: NE
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: 
+	Street: Ginger Woods 
+	StreetLine: 65 Ginger Woods Valley NE
+	Suffix: Valley
+	Zip: 68064
+}
+
+[1302 LUCERNE AVENUE  Lake Worth FL 33460,True] => 
+AddressParseResult
+{
+	City: WORTH
+	Number: 1302
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: FL
+	Street: LUCERNE AVENUE
+	StreetLine: 1302 LUCERNE AVENUE LK
+	Suffix: LK
+	Zip: 33460
+}
+
+[1302 LUCERNE AVENUE  Lake Worth FL 33460,False] => 
+AddressParseResult
+{
+	City: Worth
+	Number: 1302
+	Postdirectional: 
+	Predirectional: 
+	SecondaryNumber: 
+	SecondaryUnit: 
+	State: FL
+	Street: LUCERNE AVENUE 
+	StreetLine: 1302 LUCERNE AVENUE Lake
+	Suffix: Lake
+	Zip: 33460
+}
+
