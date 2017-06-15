@@ -2,6 +2,6 @@ version: 1.0.{build}
 image: Visual Studio 2017
 clone_depth: 1
 build:
-  verbosity: minimal
+  verbosity: normal
 artifacts:
 - path: '**/*.nupkg'
