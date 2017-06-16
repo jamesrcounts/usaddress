@@ -25,7 +25,7 @@ namespace USAddress.Tests
             Assert.NotNull(streetPatternMatch);
             Assert.True(streetPatternMatch.Success);
             Assert.True(streetPatternMatch.Captures.Count == 1);
-            Assert.True(streetPatternMatch.Captures[0].Value == "COUNTY ROAD F");
+            Approvals.Verify(streetPatternMatch.Captures[0].Value);
         }
 
         [Fact]
