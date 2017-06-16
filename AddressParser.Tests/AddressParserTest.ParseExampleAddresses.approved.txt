@@ -65,32 +65,32 @@ AddressParseResult
 [3360 County Road F Tekamah NE 68061,True] => 
 AddressParseResult
 {
-	City: F TEKAMAH
+	City: TEKAMAH
 	Number: 3360
 	Postdirectional: 
 	Predirectional: 
 	SecondaryNumber: 
 	SecondaryUnit: 
 	State: NE
-	Street: COUNTY
-	StreetLine: 3360 COUNTY RD
-	Suffix: RD
+	Street: COUNTY ROAD F
+	StreetLine: 3360 COUNTY ROAD F
+	Suffix: 
 	Zip: 68061
 }
 
 [3360 County Road F Tekamah NE 68061,False] => 
 AddressParseResult
 {
-	City: F Tekamah
+	City: Tekamah
 	Number: 3360
 	Postdirectional: 
 	Predirectional: 
 	SecondaryNumber: 
 	SecondaryUnit: 
 	State: NE
-	Street: County
-	StreetLine: 3360 County Road
-	Suffix: Road
+	Street: County Road F
+	StreetLine: 3360 County Road F
+	Suffix: 
 	Zip: 68061
 }
 
@@ -321,32 +321,32 @@ AddressParseResult
 [3360 County Road F Tekamah NE 68061,True] => 
 AddressParseResult
 {
-	City: F TEKAMAH
+	City: TEKAMAH
 	Number: 3360
 	Postdirectional: 
 	Predirectional: 
 	SecondaryNumber: 
 	SecondaryUnit: 
 	State: NE
-	Street: COUNTY
-	StreetLine: 3360 COUNTY RD
-	Suffix: RD
+	Street: COUNTY ROAD F
+	StreetLine: 3360 COUNTY ROAD F
+	Suffix: 
 	Zip: 68061
 }
 
 [3360 County Road F Tekamah NE 68061,False] => 
 AddressParseResult
 {
-	City: F Tekamah
+	City: Tekamah
 	Number: 3360
 	Postdirectional: 
 	Predirectional: 
 	SecondaryNumber: 
 	SecondaryUnit: 
 	State: NE
-	Street: County
-	StreetLine: 3360 County Road
-	Suffix: Road
+	Street: County Road F
+	StreetLine: 3360 County Road F
+	Suffix: 
 	Zip: 68061
 }
 
