@@ -911,33 +911,15 @@ namespace USAddress
         /// </returns>
         public AddressParseResult ParseAddress(string input, bool normalize)
         {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                return null;
-            }
-
-            if (normalize)
-            {
-                input = input.ToUpperInvariant();
-            }
-
-            //TODO: Create overload that accepts regex as parameter.
-            var match = AddressRegex.Match(input);
-            if (!match.Success)
-            {
-                return null;
-            }
-
-            var extracted = GetApplicableFields(match);
-            if (normalize)
-            {
-                extracted = Normalize(extracted);
-            }
-
-            return new AddressParseResult(extracted);
+            return ParseAddress(input, AddressRegex, normalize);
         }
 
         public AddressParseResult ParseAddressLine(string input, bool normalize)
+        {
+            return ParseAddress(input, AddressLineRegex, normalize);
+        }
+
+        public AddressParseResult ParseAddress(string input, Regex pattern, bool normalize)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
@@ -949,7 +931,7 @@ namespace USAddress
                 input = input.ToUpperInvariant();
             }
 
-            var match = this.AddressLineRegex.Match(input);
+            var match = pattern.Match(input);
             if (!match.Success)
             {
                 return null;
