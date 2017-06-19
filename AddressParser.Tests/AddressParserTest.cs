@@ -22,10 +22,7 @@ namespace USAddress.Tests
             var addressParser = new AddressParser();
             var streetPattern = new Regex(addressParser.StreetPattern, addressParser.MatchOptions);
             var streetPatternMatch = streetPattern.Match("COUNTY ROAD F");
-            Assert.NotNull(streetPatternMatch);
-            Assert.True(streetPatternMatch.Success);
-            Assert.True(streetPatternMatch.Captures.Count == 1);
-            Approvals.Verify(streetPatternMatch.Captures[0].Value);
+            Approvals.Verify(streetPatternMatch);
         }
 
         [Fact]
