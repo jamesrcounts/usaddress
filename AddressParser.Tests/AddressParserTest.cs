@@ -17,32 +17,6 @@ namespace USAddress.Tests
         private static readonly AddressParser Parser = AddressParser.Default;
 
         [Fact]
-        public void StreetLineTests()
-        {
-            var addressParser = new AddressParser();
-            var streetPattern = new Regex(addressParser.StreetPattern, addressParser.MatchOptions);
-            var streetPatternMatch = streetPattern.Match("COUNTY ROAD F");
-            Approvals.Verify(streetPatternMatch);
-        }
-
-        [Fact]
-        public void ParseAddressLine()
-        {
-            var addressParser = new AddressParser();
-            var result = addressParser.ParseAddressLine("3360 County Road F", true);
-            Approvals.Verify(result);
-        }
-
-        [Fact]
-        public void StateDoesNotMatchCity()
-        {
-            var reg = new Regex(Parser.PlacePattern, Parser.MatchOptions);
-            var match = reg.Match("URB LA FABRICA,PR,00704");
-            var state = match.Groups[Components.State].Value;
-            Approvals.Verify(state);
-        }
-
-        [Fact]
         public void AddressRegexIsLazy()
         {
             var addressParser = new AddressParser();
@@ -180,10 +154,18 @@ namespace USAddress.Tests
         }
 
         [Fact]
+        public void ParseAddressLine()
+        {
+            var addressParser = new AddressParser();
+            var result = addressParser.ParseAddressLine("3360 County Road F", true);
+            Approvals.Verify(result);
+        }
+
+        [Fact]
         public void ParseExampleAddresses()
         {
             var text = File.ReadAllText(PathUtilities.GetAdjacentFile("samples.txt"));
-            var examples = text.Split(new[] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries)
+            var examples = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Where(s => !s.StartsWith("#", StringComparison.OrdinalIgnoreCase));
             bool[] normalize = { true, false };
 
@@ -200,6 +182,23 @@ namespace USAddress.Tests
             Approvals.Verify(Parser.ParseAddress("999 West 89th Street Apt A New York NY 10024", false));
         }
 
+        [Fact]
+        public void StateDoesNotMatchCity()
+        {
+            var reg = new Regex(Parser.PlacePattern, Parser.MatchOptions);
+            var match = reg.Match("URB LA FABRICA,PR,00704");
+            var state = match.Groups[Components.State].Value;
+            Approvals.Verify(state);
+        }
+
+        [Fact]
+        public void StreetLineTests()
+        {
+            var addressParser = new AddressParser();
+            var streetPattern = new Regex(addressParser.StreetPattern, addressParser.MatchOptions);
+            var streetPatternMatch = streetPattern.Match("COUNTY ROAD F");
+            Approvals.Verify(streetPatternMatch);
+        }
         [Fact]
         public void VerifyAllSecondaryUnitPattern()
         {
@@ -246,6 +245,12 @@ namespace USAddress.Tests
         public void VerifyPostalBoxPattern()
         {
             Approvals.Verify(AddressParser.Default.PostalBoxPattern);
+        }
+
+        [Fact]
+        public void VerifyPostalBoxPatternAddressLineOnly()
+        {
+            Approvals.Verify(AddressParser.PostalBoxPatternAddressLineOnly);
         }
 
         [Fact]
