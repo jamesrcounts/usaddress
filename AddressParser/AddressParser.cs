@@ -56,6 +56,7 @@ namespace USAddress
         /// from a given address.
         /// </summary>
         private Regex _addressRegex;
+        private Regex _addressLineRegex;
 
         /// <summary>
         /// A combined dictionary of the ranged and not ranged secondary units.
@@ -91,6 +92,9 @@ namespace USAddress
         /// from a given address.
         /// </summary>
         public Regex AddressRegex => _addressRegex ?? (_addressRegex = InitializeRegex());
+
+        public Regex AddressLineRegex => _addressLineRegex ?? (_addressLineRegex = InitializeAddressLineRegex());
+
 
         /// <summary>
         /// Gets the pattern to match all known secondary units.
@@ -217,10 +221,12 @@ namespace USAddress
         public string PostalBoxPattern => @"# Special case for PO boxes
                     (
                         \W*
-                        (?<{1}>(P[\.\s]?O[\.\s]?\s?)?BOX\s[0-9]+)\W+
-                        {0}
+                        {0}\W+
+                        {1}
                         \W*
-                    )".FormatInvariant(PlacePattern, Components.StreetLine);
+                    )".FormatInvariant(PostalBoxPatternAddressLineOnly, PlacePattern);
+        
+        public string PostalBoxPatternAddressLineOnly => @"(?<{0}>(P[\.\s]?O[\.\s]?\s?)?BOX\s[0-9]+)".FormatInvariant(Components.StreetLine);
 
         /// <summary>
         /// Gets the ranged secondary unit pattern.
@@ -476,6 +482,9 @@ namespace USAddress
         /// </value>
         public string StreetPattern => @"
                         (?:
+                          # special case for addresses like 100 COUNTY ROAD F  http://regexstorm.net/tester?p=%28%3f%3a%28%3f%3cSTREET%3eCOUNTY%5cW%2bROAD%5cW*%5cw%2b%29%29&i=COUNTY+ROAD+FG%0d%0a%0d%0a&o=ixs
+                          (?:(?<STREET>COUNTY\W*ROAD\W*\w+))
+                          |
                           # special case for addresses like 100 South Street
                           (?:(?<{2}>{0})\W+
                              (?<{3}>{1})\b)
@@ -902,6 +911,16 @@ namespace USAddress
         /// </returns>
         public AddressParseResult ParseAddress(string input, bool normalize)
         {
+            return ParseAddress(input, AddressRegex, normalize);
+        }
+
+        public AddressParseResult ParseAddressLine(string input, bool normalize)
+        {
+            return ParseAddress(input, AddressLineRegex, normalize);
+        }
+
+        public AddressParseResult ParseAddress(string input, Regex pattern, bool normalize)
+        {
             if (string.IsNullOrWhiteSpace(input))
             {
                 return null;
@@ -912,17 +931,16 @@ namespace USAddress
                 input = input.ToUpperInvariant();
             }
 
-            //TODO: Create overload that accepts regex as parameter.
-            var match = AddressRegex.Match(input);
+            var match = pattern.Match(input);
             if (!match.Success)
             {
                 return null;
             }
 
-            var extracted = GetApplicableFields(match);
+            var extracted = this.GetApplicableFields(match);
             if (normalize)
             {
-                extracted = Normalize(extracted);
+                extracted = this.Normalize(extracted);
             }
 
             return new AddressParseResult(extracted);
@@ -1066,6 +1084,32 @@ namespace USAddress
             return output;
         }
 
+        private Regex InitializeAddressLineRegex()
+        {
+            var numberPattern = @"(
+                    ((?<{0}>\d+)(?<{1}>(-[0-9])|(\-?[A-Z]))(?=\b))    # Unit-attached
+                    |(?<{0}>\d+[\-\ ]?\d+\/\d+)                                   # Fractional
+                    |(?<{0}>\d+-?\d*)                                             # Normal Number
+                    |(?<{0}>[NSWE]\ ?\d+\ ?[NSWE]\ ?\d+)                          # Wisconsin/Illinois
+                  )".FormatInvariant(Components.Number, Components.SecondaryNumber);
+
+            var generalPattern = @"(
+                        [^\w\#]*    # skip non-word chars except # (e.g. unit)
+                        (  {0} )\W*
+                           {1}\W*
+                        (?:{2}\W+)?
+                    )".FormatInvariant(numberPattern, this.StreetPattern, this.AllSecondaryUnitPattern);
+
+            var addressPattern = @"
+                    ^
+                    {0}
+                    |
+                    {1}
+                ".FormatInvariant(this.PostalBoxPatternAddressLineOnly, generalPattern);
+
+            return new Regex(generalPattern, MatchOptions);
+        }
+
         /// <summary>
         /// Builds the gigantic regular expression stored in the addressRegex static
         /// member that actually does the parsing.
@@ -1098,6 +1142,7 @@ namespace USAddress
                            {3}
                         \W*         # require on non-word chars at end
                     )".FormatInvariant(numberPattern, StreetPattern, AllSecondaryUnitPattern, PlacePattern);
+
 
             var addressPattern = @"
                     ^

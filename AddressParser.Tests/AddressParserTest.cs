@@ -17,6 +17,26 @@ namespace USAddress.Tests
         private static readonly AddressParser Parser = AddressParser.Default;
 
         [Fact]
+        public void StreetLineTests()
+        {
+            var addressParser = new AddressParser();
+            var streetPattern = new Regex(addressParser.StreetPattern, addressParser.MatchOptions);
+            var streetPatternMatch = streetPattern.Match("COUNTY ROAD F");
+            Assert.NotNull(streetPatternMatch);
+            Assert.True(streetPatternMatch.Success);
+            Assert.True(streetPatternMatch.Captures.Count == 1);
+            Approvals.Verify(streetPatternMatch.Captures[0].Value);
+        }
+
+        [Fact]
+        public void ParseAddressLine()
+        {
+            var addressParser = new AddressParser();
+            var result = addressParser.ParseAddressLine("3360 County Road F", true);
+            Approvals.Verify(result);
+        }
+
+        [Fact]
         public void StateDoesNotMatchCity()
         {
             var reg = new Regex(Parser.PlacePattern, Parser.MatchOptions);
