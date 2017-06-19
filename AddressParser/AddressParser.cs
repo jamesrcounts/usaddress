@@ -231,6 +231,9 @@ namespace USAddress
                         \W*
                     )".FormatInvariant(PostalBoxPatternAddressLineOnly, PlacePattern);
         
+        /// <summary>
+        /// The postal box pattern without the place fields (no city/state/zip)
+        /// </summary>
         public string PostalBoxPatternAddressLineOnly => @"(?<{0}>(P[\.\s]?O[\.\s]?\s?)?BOX\s[0-9]+)".FormatInvariant(Components.StreetLine);
 
         /// <summary>
@@ -919,11 +922,15 @@ namespace USAddress
             return ParseAddress(input, AddressRegex, normalize);
         }
 
-        public AddressParseResult ParseAddressLine(string input, bool normalize)
-        {
-            return ParseAddress(input, AddressLineRegex, normalize);
-        }
-
+        /// <summary>
+        /// Attempts to parse the given input as a US address.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="pattern">The regex pattern to use for matching address fields</param>
+        /// <param name="normalize">if set to <c>true</c> then normalize extracted fields.</param>
+        /// <returns>
+        /// The parsed address, or null if the address could not be parsed.
+        /// </returns>
         public AddressParseResult ParseAddress(string input, Regex pattern, bool normalize)
         {
             if (string.IsNullOrWhiteSpace(input))
@@ -949,6 +956,19 @@ namespace USAddress
             }
 
             return new AddressParseResult(extracted);
+        }
+
+        /// <summary>
+        /// Attempts to parse the given input as the street line of a US address.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="normalize">if set to <c>true</c> then normalize extracted fields.</param>
+        /// <returns>
+        /// The parsed address fields, or null if the address could not be parsed.
+        /// </returns>
+        public AddressParseResult ParseAddressLine(string input, bool normalize)
+        {
+            return ParseAddress(input, AddressLineRegex, normalize);
         }
 
         /// <summary>
