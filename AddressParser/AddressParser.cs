@@ -50,12 +50,15 @@ namespace USAddress
                 Components.SecondaryNumber
             };
 
-
         /// <summary>
         /// The gigantic regular expression that actually extracts the bits and pieces
         /// from a given address.
         /// </summary>
         private Regex _addressRegex;
+
+        /// <summary>
+        /// A regular expression that only extracts the street address fields.
+        /// </summary>
         private Regex _addressLineRegex;
 
         /// <summary>
@@ -93,8 +96,10 @@ namespace USAddress
         /// </summary>
         public Regex AddressRegex => _addressRegex ?? (_addressRegex = InitializeRegex());
 
+        /// <summary>
+        /// Gets the regular expression that only extracts the street address fields.
+        /// </summary>
         public Regex AddressLineRegex => _addressLineRegex ?? (_addressLineRegex = InitializeAddressLineRegex());
-
 
         /// <summary>
         /// Gets the pattern to match all known secondary units.
@@ -937,10 +942,10 @@ namespace USAddress
                 return null;
             }
 
-            var extracted = this.GetApplicableFields(match);
+            var extracted = GetApplicableFields(match, pattern);
             if (normalize)
             {
-                extracted = this.Normalize(extracted);
+                extracted = Normalize(extracted);
             }
 
             return new AddressParseResult(extracted);
@@ -1012,14 +1017,15 @@ namespace USAddress
         /// consisting of the fields that we actually care to extract from the address.
         /// </summary>
         /// <param name="match">The successful <see cref="Match"/> instance.</param>
+        /// <param name="regex">The parsing <see cref="Regex"/>.</param>
         /// <returns>A dictionary in which the keys are the name of the fields and the values
         /// are pulled from the input address.</returns>
-        private Dictionary<string, string> GetApplicableFields(Match match)
+        private Dictionary<string, string> GetApplicableFields(Match match, Regex regex)
         {
             Contract.Requires(match != null);
             var applicable = new Dictionary<string, string>();
 
-            foreach (var field in AddressRegex.GetGroupNames())
+            foreach (var field in regex.GetGroupNames())
             {
                 if (!_fields.Contains(field))
                 {
@@ -1098,14 +1104,14 @@ namespace USAddress
                         (  {0} )\W*
                            {1}\W*
                         (?:{2}\W+)?
-                    )".FormatInvariant(numberPattern, this.StreetPattern, this.AllSecondaryUnitPattern);
+                    )".FormatInvariant(numberPattern, StreetPattern, AllSecondaryUnitPattern);
 
             var addressPattern = @"
                     ^
                     {0}
                     |
                     {1}
-                ".FormatInvariant(this.PostalBoxPatternAddressLineOnly, generalPattern);
+                ".FormatInvariant(PostalBoxPatternAddressLineOnly, generalPattern);
 
             return new Regex(generalPattern, MatchOptions);
         }
