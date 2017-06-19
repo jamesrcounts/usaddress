@@ -6,6 +6,8 @@
 //   Defines the AddressParser type.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
@@ -51,15 +53,15 @@ namespace USAddress
             };
 
         /// <summary>
+        /// A regular expression that only extracts the street address fields.
+        /// </summary>
+        private Regex _addressLineRegex;
+
+        /// <summary>
         /// The gigantic regular expression that actually extracts the bits and pieces
         /// from a given address.
         /// </summary>
         private Regex _addressRegex;
-
-        /// <summary>
-        /// A regular expression that only extracts the street address fields.
-        /// </summary>
-        private Regex _addressLineRegex;
 
         /// <summary>
         /// A combined dictionary of the ranged and not ranged secondary units.
@@ -83,6 +85,11 @@ namespace USAddress
         public static AddressParser Default { get; } = new AddressParser();
 
         /// <summary>
+        /// The postal box pattern without the place fields (no city/state/zip)
+        /// </summary>
+        public static string PostalBoxPatternAddressLineOnly => @"(?<{0}>(P[\.\s]?O[\.\s]?\s?)?BOX\s[0-9]+)".FormatInvariant(Components.StreetLine);
+
+        /// <summary>
         /// Gets the zip pattern.
         /// </summary>
         /// <value>
@@ -91,15 +98,15 @@ namespace USAddress
         public static string ZipPattern => @"\d{5}(?:-?\d{4})?";
 
         /// <summary>
+        /// Gets the regular expression that only extracts the street address fields.
+        /// </summary>
+        public Regex AddressLineRegex => _addressLineRegex ?? (_addressLineRegex = InitializeAddressLineRegex());
+
+        /// <summary>
         /// Gets the gigantic regular expression that actually extracts the bits and pieces
         /// from a given address.
         /// </summary>
         public Regex AddressRegex => _addressRegex ?? (_addressRegex = InitializeRegex());
-
-        /// <summary>
-        /// Gets the regular expression that only extracts the street address fields.
-        /// </summary>
-        public Regex AddressLineRegex => _addressLineRegex ?? (_addressLineRegex = InitializeAddressLineRegex());
 
         /// <summary>
         /// Gets the pattern to match all known secondary units.
@@ -212,10 +219,7 @@ namespace USAddress
         public string PlacePattern => @"
                     (?:{0}\W*)?
                     (?:(?<{2}>{1}))?
-                ".FormatInvariant(
-            CityAndStatePattern,
-            ZipPattern,
-            Components.Zip);
+                ".FormatInvariant(CityAndStatePattern, ZipPattern, Components.Zip);
 
         /// <summary>
         /// Gets the post office box pattern.
@@ -230,11 +234,6 @@ namespace USAddress
                         {1}
                         \W*
                     )".FormatInvariant(PostalBoxPatternAddressLineOnly, PlacePattern);
-        
-        /// <summary>
-        /// The postal box pattern without the place fields (no city/state/zip)
-        /// </summary>
-        public string PostalBoxPatternAddressLineOnly => @"(?<{0}>(P[\.\s]?O[\.\s]?\s?)?BOX\s[0-9]+)".FormatInvariant(Components.StreetLine);
 
         /// <summary>
         /// Gets the ranged secondary unit pattern.
@@ -933,6 +932,11 @@ namespace USAddress
         /// </returns>
         public AddressParseResult ParseAddress(string input, Regex pattern, bool normalize)
         {
+            if (pattern == null)
+            {
+                throw new ArgumentNullException(nameof(pattern));
+            }
+
             if (string.IsNullOrWhiteSpace(input))
             {
                 return null;
@@ -1110,6 +1114,11 @@ namespace USAddress
             return output;
         }
 
+        /// <summary>
+        /// Builds the regular expression stored in <see cref="AddressLineRegex"/>
+        /// that does the parsing for address line fields only.
+        /// </summary>
+        /// <returns>The parser <see cref="Regex"/>.</returns>
         private Regex InitializeAddressLineRegex()
         {
             var numberPattern = @"(
@@ -1133,7 +1142,7 @@ namespace USAddress
                     {1}
                 ".FormatInvariant(PostalBoxPatternAddressLineOnly, generalPattern);
 
-            return new Regex(generalPattern, MatchOptions);
+            return new Regex(addressPattern, MatchOptions);
         }
 
         /// <summary>
@@ -1168,7 +1177,6 @@ namespace USAddress
                            {3}
                         \W*         # require on non-word chars at end
                     )".FormatInvariant(numberPattern, StreetPattern, AllSecondaryUnitPattern, PlacePattern);
-
 
             var addressPattern = @"
                     ^

@@ -90,11 +90,15 @@ namespace USAddress
             get
             {
                 if (_streetLine != null)
+                {
                     return _streetLine;
+                }
 
                 _streetLine = GetField(Components.StreetLine);
                 if (!string.IsNullOrWhiteSpace(_streetLine))
+                {
                     return _streetLine;
+                }
 
                 return _streetLine = CreateStreetLine();
             }
