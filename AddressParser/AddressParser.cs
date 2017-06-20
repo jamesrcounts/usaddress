@@ -489,8 +489,11 @@ namespace USAddress
         /// </value>
         public string StreetPattern => @"
                         (?:
-                          # special case for addresses like 100 COUNTY ROAD F  http://regexstorm.net/tester?p=%28%3f%3a%28%3f%3cSTREET%3eCOUNTY%5cW%2bROAD%5cW*%5cw%2b%29%29&i=COUNTY+ROAD+FG%0d%0a%0d%0a&o=ixs
+                          # special case for addresses like 100 COUNTY ROAD F  http://regexstorm.net/tester?p=%28%3f%3a%28%3f%3cSTREET%3eCOUNTY%5cW*ROAD%5cW*%5cw%2b%29%29&i=COUNTY+ROAD+FG%0d%0a%0d%0a&o=ixs
                           (?:(?<STREET>COUNTY\W*ROAD\W*\w+))
+                          |
+                          # special case for addresses like 3419 Avenue C  http://regexstorm.net/tester?p=%28%3f%3a%28%3f%3cSTREET%3eAVENUE%5cW*%5cw%2b%29%29%0d%0a%23%28%3f%3a%28%3f%3cSTREET%3eAVENUE%5cW*%5ba-zA-Z%5d%7b1%7d%29%29%28%3f%3a%5b%5cs%5d%7c%5b%2c%5d%2b%29%0d%0a&i=3419+Avenue+C+Council+Bluffs+IA+51501%0d%0a5946+AVENUE+E%2c+MCINTOSH%2c+FL+32664%0d%0a&o=ixs
+                          (?:(?<STREET>AVENUE\W*\w+))
                           |
                           # special case for addresses like 100 South Street
                           (?:(?<{2}>{0})\W+
