@@ -3,17 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressParser", "AddressParser\AddressParser.csproj", "{FCEBD207-0C18-4D92-974C-C7A615AC7DEE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressParser", "src\AddressParser\AddressParser.csproj", "{FCEBD207-0C18-4D92-974C-C7A615AC7DEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressParser.Driver", "AddressParser.Driver\AddressParser.Driver.csproj", "{800A1F3D-65D5-41C4-899E-A75366950016}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressParser.Driver", "tests\AddressParser.Driver\AddressParser.Driver.csproj", "{800A1F3D-65D5-41C4-899E-A75366950016}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E78609CD-0949-4633-A87F-E6DECF2C7168}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressParser.Tests", "AddressParser.Tests\AddressParser.Tests.csproj", "{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressParser.Tests", "tests\AddressParser.Tests\AddressParser.Tests.csproj", "{9E7C803F-3E40-46C8-A0BB-2A4606A8BDA0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FA40BAD2-EAB6-4369-ACE0-C1D3287151B5}"
 	ProjectSection(SolutionItems) = preProject
 		CodeAnalysisDictionary.xml = CodeAnalysisDictionary.xml
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{935FD359-B871-4162-A961-6322938B08EF}"
