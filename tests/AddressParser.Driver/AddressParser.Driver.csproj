@@ -24,7 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\usaddress.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\usaddress.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -52,7 +52,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AddressParser\AddressParser.csproj">
+    <ProjectReference Include="..\..\src\AddressParser\AddressParser.csproj">
       <Project>{FCEBD207-0C18-4D92-974C-C7A615AC7DEE}</Project>
       <Name>AddressParser</Name>
     </ProjectReference>

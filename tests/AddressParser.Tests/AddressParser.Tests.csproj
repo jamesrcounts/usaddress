@@ -27,7 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>..\usaddress.tests.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\usaddress.tests.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -125,7 +125,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AddressParser\AddressParser.csproj">
+    <ProjectReference Include="..\..\src\AddressParser\AddressParser.csproj">
       <Project>{fcebd207-0c18-4d92-974c-c7a615ac7dee}</Project>
       <Name>AddressParser</Name>
     </ProjectReference>
