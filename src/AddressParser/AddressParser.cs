@@ -9,8 +9,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -990,7 +988,6 @@ namespace USAddress
         /// matched successfully.</returns>
         private static string GetNormalizedValueByRegexLookup(Dictionary<string, string> map, string input)
         {
-            Contract.Requires(map != null);
             var output = input;
 
             foreach (var pair in map)
@@ -1018,7 +1015,6 @@ namespace USAddress
         /// matched successfully.</returns>
         private static string GetNormalizedValueByStaticLookup(IDictionary<string, string> map, string input)
         {
-            Contract.Requires(map != null);
             if (!map.TryGetValue(input, out string output))
             {
                 output = input;
@@ -1049,7 +1045,6 @@ namespace USAddress
         /// are pulled from the input address.</returns>
         private Dictionary<string, string> GetApplicableFields(Match match, Regex regex)
         {
-            Contract.Requires(match != null);
             var applicable = new Dictionary<string, string>();
 
             foreach (var field in regex.GetGroupNames())
@@ -1203,7 +1198,6 @@ namespace USAddress
         /// <returns>A dictionary of the extracted fields with normalized values.</returns>
         private Dictionary<string, string> Normalize(IDictionary<string, string> extracted)
         {
-            Contract.Requires(extracted != null);
             var normalized = new Dictionary<string, string>();
 
             foreach (var pair in extracted)
@@ -1234,21 +1228,6 @@ namespace USAddress
             return normalized;
         }
 
-        /// <summary>
-        /// Contracts that are true throughout the life of the class instance.
-        /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by the CodeContract analyzer")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "CodeContract analyzer requires this to be an instance member.")]
-        [ExcludeFromCodeCoverage]
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_fields != null);
-            Contract.Invariant(StatesAndProvinces != null);
-            Contract.Invariant(RangelessUnits != null);
-            Contract.Invariant(StreetSuffixes != null);
-            Contract.Invariant(DirectionalNames != null);
-            Contract.Invariant(RangedUnits != null);
-        }
+   
     }
 }
