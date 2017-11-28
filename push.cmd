@@ -1,3 +1,3 @@
-pushd .\AddressParser\bin\Debug\
-..\..\..\.nuget\NuGet.exe push AddressParser.0.0.??.nupkg -Verbosity detailed -Source https://api.nuget.org/v3/index.json
+pushd .\src\AddressParser\bin\Debug\
+dotnet nuget -v Verbose  push AddressParser.1.?.?.symbols.nupkg -s https://api.nuget.org/v3/index.json
 popd
