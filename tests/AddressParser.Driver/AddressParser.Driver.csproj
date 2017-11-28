@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject>USAddress.Driver.Program</StartupObject>
@@ -8,6 +8,8 @@
     <Authors>Jim Counts</Authors>
     <Copyright>Copyright © Jim Counts 2011</Copyright>
     <Description>Command line shell for AddressParser</Description>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <RootNamespace>USAddress.Driver</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\AddressParser\AddressParser.csproj" />

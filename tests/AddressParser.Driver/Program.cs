@@ -1,9 +1,10 @@
-﻿namespace USAddress.Driver
+﻿using USAddress.Driver.Properties;
+
+namespace USAddress.Driver
 {
     using System;
     using System.Linq;
 
-    using USAddress.Driver.Properties;
 
     internal static class Program
     {
