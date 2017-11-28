@@ -3,5 +3,15 @@
     <TargetFrameworks>netstandard1.4</TargetFrameworks>
     <Company />
     <RootNamespace>USAddress</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Jim Counts</Authors>
+    <Description>This is a partial port of the Perl Geo::StreetAddress::US CPAN module to C#.</Description>
+    <Copyright>Copyright © Jim Counts 2011</Copyright>
+    <PackageLicenseUrl>https://raw.github.com/jamesrcounts/usaddress/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/jamesrcounts/usaddress</PackageProjectUrl>
+    <PackageIconUrl>https://raw.github.com/jamesrcounts/usaddress/master/Icons/icon_36386.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/jamesrcounts/usaddress</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 </Project>
