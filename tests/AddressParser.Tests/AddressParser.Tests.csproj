@@ -1,17 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net461</TargetFrameworks>
-    <Description>Tests for AddressParser</Description>
-    <Authors>Jim Counts</Authors>
-    <Company />
-    <Copyright>Copyright © Jim Counts 2014</Copyright>
-    <ApplicationIcon />
-    <OutputType>Exe</OutputType>
-    <StartupObject />
+    <RootNamespace>USAddress.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ApprovalTests" Version="3.0.13" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.1" />
     <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
