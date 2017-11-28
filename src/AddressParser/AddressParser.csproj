@@ -4,6 +4,7 @@
     <Company />
     <RootNamespace>USAddress</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSource>true</IncludeSource>
     <Authors>Jim Counts</Authors>
     <Description>This is a partial port of the Perl Geo::StreetAddress::US CPAN module to C#.</Description>
     <Copyright>Copyright © Jim Counts 2011</Copyright>
