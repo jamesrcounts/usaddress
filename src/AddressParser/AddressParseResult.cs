@@ -33,10 +33,16 @@ namespace USAddress
         ///     Initializes a new instance of the <see cref="AddressParseResult" /> class.
         /// </summary>
         /// <param name="fields">The fields that were parsed.</param>
-        public AddressParseResult(Dictionary<string, string> fields)
+        public AddressParseResult(Dictionary<string, string> fields, Match regexMatch = null)
         {
             _fields = fields ?? new Dictionary<string, string>();
+            RegexMatch = regexMatch;
         }
+
+        /// <summary>
+        ///     Gets the source RegularExpressions.Match object holding positional information in input text.
+        /// </summary>
+        public Match RegexMatch { get; private set; }
 
         /// <summary>
         ///     Gets the city name.

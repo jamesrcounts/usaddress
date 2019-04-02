@@ -960,7 +960,7 @@ namespace USAddress
                 extracted = Normalize(extracted);
             }
 
-            return new AddressParseResult(extracted);
+            return new AddressParseResult(extracted, match);
         }
 
         /// <summary>
