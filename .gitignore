@@ -111,7 +111,4 @@ UpgradeLog*.XML
 # orig diff files
 *.orig
 
-.vs/AddressParser/v15/Server/sqlite3/db.lock
-.vs/AddressParser/v15/Server/sqlite3/storage.ide
-.vs/AddressParser/v15/Server/sqlite3/storage.ide-wal
-.vs/AddressParser/v15/Server/sqlite3/storage.ide-shm
+.vs/
