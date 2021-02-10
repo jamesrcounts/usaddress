@@ -319,6 +319,10 @@ namespace USAddress
             {
                 @"BOX",
                 "BOX"
+            },
+            {
+                @"PMB",
+                "PMB"
             }
         };
 
